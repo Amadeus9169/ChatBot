@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        /* iOS 风格的全局样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
+            font-size: 16px;
+            line-height: 1.4705882353;
+            letter-spacing: -0.022em;
+            color: rgb(29, 29, 31);
+            background-color: rgb(245, 245, 247);
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Important: Set body height to 100vh */
+            overflow: hidden; /* Prevent body scrolling */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+        }
+
+        @supports (-webkit-hyphens: none) and (not (-ms-accelerator: true)) and (not (windows: true)) {
+            body {
+                font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+            }
+        }
+
+        @media screen and (min-width:0\0) and (min-resolution: +72dpi) {
+            body {
+                font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+            }
+        }
+
+        @media (min-width: 768px) {
+            body {
+                font-size: 19px;
+                padding: 30px;
+            }
+        }
+
+        body.dark-mode {
+            background-color: #1c1c1e;
+            color: #f5f5f7;
+        }
+
+        h1, h2, h3 {
+            margin: 0 0 1em;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        p {
+            margin-bottom: 1em;
+            color: #333333;
+        }
+
+        a {
+            color: #007aff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056d3;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --border-radius: 980px;
+        }
+
+        /* Chat container styles */
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Important: Use 100% to fill body */
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 95%;
+            //margin: 0 auto;
+            //box-sizing: border-box;
+        }
+
+        .message {
+            border-radius: var(--border-radius);
+            padding: 10px 14px;
+            margin-bottom: 1px;
+            word-wrap: break-word;
+            max-width: 95%;
+        }
+
+        .message.user {
+            color: #004085;
+            text-align: right;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            color: #1c1c1e;
+            text-align: left;
+            align-self: flex-start;
+        }
+
+        /* Locked input container styles */
+        #input-container {
+    display: flex;
+    background-color: #F5F5F7;
+    padding: 10px;
+    border-top: 1px solid #d0d0d0;
+    position: sticky;
+    bottom: 0;
+    max-width: 780px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#input-wrapper {
+    flex: 1;
+    position: relative; /* Needed for absolute positioning of the button */
+}
+
+#user-input {
+    width: 100%;
+    padding: 10px 44px 10px 14px; /* Right padding for the button */
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    font-size: 16px;
+	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
+            
+    box-sizing: border-box;
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 40px; /* Set a minimum height */
+    overflow: hidden; /* Prevent content from overflowing visually */
+}
+
+#user-input:focus {
+    outline: none;
+    border-color: #0065FA;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+}
+
+.send-button {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust as needed */
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #007aff;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+	
+	.send-button:hover {
+	    background-color: #005eff;
+	}
+	
+	.send-button:active {
+	    background-color: #004de0;
+	}
+	
+	.send-button:disabled {
+	    background-color: #c7c7cc;
+	    cursor: not-allowed;
+	}
+	
+	.message, .send-button, #user-input {
+	    border-radius: var(--border-radius);
+	}
+        /* Model dropdown styles */
+        #model-select {
+            margin-left: 10px;
+            padding: 8px;
+            font-size: 16px;
+            border-radius: var(--border-radius);
+            border: 1px solid #d0d0d0;
+            background-color: #ffffff;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+
+    </style>
+</head>
+<label for="api-key">API Key:</label>
+    <input type="text" id="api-key" value="YOUR_API_KEY"><br><br>
+
+    <label for="api-url">API URL:</label>
+    <input type="text" id="api-url" value="https://api.siliconflow.cn/v1/chat/completions" style="width: 500px;"><br><br>
+
+    
+<div id="chat-container">
+    <div id="messages"></div>
+    <div id="input-container">
+        <div id="input-wrapper">
+            <textarea id="user-input"></textarea>
+            <button class="send-button" id="send-button" disabled>
+                Send
+            </button>
+        </div>
+        <select id="model-select">
+            <option value="Vendor-A/Qwen/Qwen2.5-72B-Instruct">VQwen2.5.72</option>
+            <option value="Qwen/Qwen2.5-7B-Instruct">FQwen2.5.7</option>
+            <option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
+            <option value="Qwen/Qwen2.5-Coder-32B-Instruct">QwenCoder32</option>
+        </select>
+    </div>
+</div>
+
+
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+      const messagesContainer = document.getElementById('messages');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+	const apiKeyInput = document.getElementById('api-key');
+        const apiUrlInput = document.getElementById('api-url');
+      const modelSelect = document.getElementById('model-select');
+
+      //const apiKey = 'Bearer sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq';
+      //const apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
+
+    let context = [];
+	const MAX_CONTEXT_SIZE = 3; // Adjust this jk to control rr context history length
+
+
+    userInput.addEventListener('input', () => {
+        sendButton.disabled = userInput.value.trim() === '';
+    });
+
+	      const textarea = document.getElementById('user-input');
+
+textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+
+	      
+    function appendMessage(content, sender) {
+      const messageElement = document.createElement('div');
+      messageElement.className = `message ${sender}`;
+      messageElement.innerHTML = marked.parse(content);
+      messagesContainer.appendChild(messageElement);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const userMessage = userInput.value.trim();
+      if (!userMessage) return;
+	
+	const apiKey = apiKeyInput.value;
+            const apiUrl = apiUrlInput.value;
+      const selectedModel = modelSelect.value;
+
+      appendMessage(userMessage, 'user');
+
+      // Add summarization prompt *before* adding the user message to the context
+    if (context.length > MAX_CONTEXT_SIZE) {
+      const summaryPrompt = {
+        role: 'user',
+        content: `Recall context briefly. Answer following question briefly and accurately:`
+      };
+      context.push(summaryPrompt);
+    }
+
+      context.push({ role: 'user', content: userMessage });
+      userInput.value = '';
+      sendButton.disabled = true;
+	sendButton.textContent = "Loading..."; // Change button text
+      try {
+        const options = {
+          method: 'POST',
+          headers: {
+                Authorization: `Bearer ${apiKey}`, // Use Bearer token
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: selectedModel,
+            messages: context.slice(-MAX_CONTEXT_SIZE), // Send only the last MAX_CONTEXT_SIZE messages
+            top_p: 0.9,
+            temperature: 0.7,
+            frequency_penalty: 0.4,
+            stream: true
+          })
+        };
+
+        const response = await fetch(apiUrl, options);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("API Error:", errorData);
+          appendMessage(`Error: ${response.status} - ${response.statusText}`, 'bot');
+          return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let partialResponse = "";
+        let isSummary = false;
+
+        const messageElement = document.createElement('div');
+        messageElement.className = `message bot`;
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            messageElement.innerHTML = marked.parse(partialResponse);
+            if (isSummary) {
+              context.pop(); // Remove the summary prompt after receiving the summary
+            }
+            context.push({ role: 'assistant', content: partialResponse });
+            break;
+          }
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n').filter(line => line.trim() !== '');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.substring(6));
+                if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
+                  if (context.length > 2 && !isSummary && partialResponse.length === 0 && data.choices[0].delta.content.toLowerCase().includes("summary:") ) {
+                    isSummary = true;
+                  }
+                  partialResponse += data.choices[0].delta.content;
+                  messageElement.innerHTML = marked.parse(partialResponse);
+                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+              } catch (parseError) {
+                console.error("Parse error:", parseError, "Line:", line);
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        appendMessage('Error: Unable to connect to the server.', 'bot');
+      } finally {
+        sendButton.disabled = false;
+	sendButton.textContent = "Send"; // Restore button text
+      }
+    }
+
+            sendButton.addEventListener('click', sendMessage); // Now sendButton will exist
+            userInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+
+    // Load marked.js library
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+    document.head.appendChild(script);
+
+    </script>
+</body>
+</html>
