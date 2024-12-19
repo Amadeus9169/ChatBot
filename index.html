@@ -404,6 +404,11 @@ showSettingsButton.addEventListener('click', () => {
                 const selectedModel = modelSelect.value;
 
                 appendMessage(userMessage, 'user');
+	// Reset textarea height and class *before* clearing the value
+                userInput.style.height = 'auto';
+                userInput.classList.remove('multiline');
+                userInput.value = ''; // Clear the input AFTER resetting height
+
 
                 if (context.length > MAX_CONTEXT_SIZE) {
                     const summaryPrompt = {
