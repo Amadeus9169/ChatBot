@@ -5,6 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot</title>
     <style>
+:root {
+            --primary-color: #007aff; /* Primary button/input color */
+            --border-color: #d0d0d0; /* Border color */
+            --border-radius: 10px; /* Border radius */
+            --font-size: 16px;
+            --padding: 10px 14px;
+            --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
+        }
+
+        input[type="text"],
+        textarea,
+        button,
+        select { /* Apply to all these elements */
+            padding: var(--padding);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size);
+            font-family: var(--font-family);
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+        button:hover {
+            background-color: #005eff;
+        }
+        button:active {
+            background-color: #004de0;
+        }
+
+        button:disabled {
+            background-color: #c7c7cc;
+            cursor: not-allowed;
+        }
+        textarea{
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 40px; /* Set a minimum height */
+            overflow: hidden; /* Prevent content from overflowing visually */
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #0065FA;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+        }
         /* iOS 风格的全局样式 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
@@ -198,185 +246,212 @@
             appearance: none;
         }
 
+	/* Styles omitted for brevity */
+        #settings-container {
+            display: none; /* Initially hidden */
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
 
     </style>
 </head>
-<label for="api-key">API Key:</label>
-    <input type="text" id="api-key" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
 
-    <label for="api-url">API URL:</label>
-    <input type="text" id="api-url" value="https://api.siliconflow.cn/v1/chat/completions" style="width: 500px;"><br><br>
+<body>
 
-    
-<div id="chat-container">
+  <button id="show-settings">API</button> <div id="settings-container">
+        <label for="api-key">API Key:</label>
+<input type="text" id="api-key" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
+
+<label for="api-url">API URL:</label>
+<input type="text" id="api-url" style="width: 500px;" value="https://api.siliconflow.cn/v1/chat/completions"><br><br>
+
+        <button id="save-api">Save API</button>
+    </div>
+
+  <div id="chat-container">
     <div id="messages"></div>
     <div id="input-container">
-        <div id="input-wrapper">
-            <textarea id="user-input"></textarea>
-            <button class="send-button" id="send-button" disabled>
-                Send
-            </button>
-        </div>
-        <select id="model-select">
+      <div id="input-wrapper">
+        <textarea id="user-input"></textarea>
+        <button class="send-button" id="send-button" disabled>Send</button>
+      </div>
+     <select id="model-select">
             <option value="Vendor-A/Qwen/Qwen2.5-72B-Instruct">VQwen2.5.72</option>
             <option value="Qwen/Qwen2.5-7B-Instruct">FQwen2.5.7</option>
             <option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
             <option value="Qwen/Qwen2.5-Coder-32B-Instruct">QwenCoder32</option>
         </select>
     </div>
-</div>
+  </div>
 
-
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <script>
+        document.addEventListener('DOMContentLoaded', function() {
       const messagesContainer = document.getElementById('messages');
       const userInput = document.getElementById('user-input');
       const sendButton = document.getElementById('send-button');
-	const apiKeyInput = document.getElementById('api-key');
-        const apiUrlInput = document.getElementById('api-url');
+      const apiKeyInput = document.getElementById('api-key');
+      const apiUrlInput = document.getElementById('api-url');
+      const showSettingsButton = document.getElementById('show-settings');
+            const settingsContainer = document.getElementById('settings-container');
+            const saveApiButton = document.getElementById('save-api');
       const modelSelect = document.getElementById('model-select');
 
-      //const apiKey = 'Bearer sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq';
-      //const apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
 
-    let context = [];
-	const MAX_CONTEXT_SIZE = 3; // Adjust this jk to control rr context history length
+      let apiKey = localStorage.getItem('apiKey');
+      let apiUrl = localStorage.getItem('apiUrl');
+      let context = [];
+      const MAX_CONTEXT_SIZE = 3;
 
 
-    userInput.addEventListener('input', () => {
-        sendButton.disabled = userInput.value.trim() === '';
-    });
 
-	      const textarea = document.getElementById('user-input');
+// Check for existing API credentials
+      if (apiKey && apiUrl) {
+        // Hide settings container
+        settingsContainer.style.display = 'none';
+      } else {
+        // Show settings container
+        settingsContainer.style.display = 'block';
+      }
 
-textarea.addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-});
+showSettingsButton.addEventListener('click', () => {
+                settingsContainer.style.display = (settingsContainer.style.display === 'none') ? 'block' : 'none';
+            });
 
-	      
-    function appendMessage(content, sender) {
-      const messageElement = document.createElement('div');
-      messageElement.className = `message ${sender}`;
-      messageElement.innerHTML = marked.parse(content);
-      messagesContainer.appendChild(messageElement);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
 
-    async function sendMessage() {
-      const userMessage = userInput.value.trim();
-      if (!userMessage) return;
-	
-	const apiKey = apiKeyInput.value;
-            const apiUrl = apiUrlInput.value;
-      const selectedModel = modelSelect.value;
+   saveApiButton.addEventListener('click', () => {
+                apiKey = apiKeyInput.value;
+                apiUrl = apiUrlInput.value;
+                localStorage.setItem('apiKey', apiKey);
+                localStorage.setItem('apiUrl', apiUrl);
+                settingsContainer.style.display = 'none'; // Hide after saving
+            });
 
-      appendMessage(userMessage, 'user');
+            userInput.addEventListener('input', () => {
+                sendButton.disabled = userInput.value.trim() === '';
+            });
 
-      // Add summarization prompt *before* adding the user message to the context
-    if (context.length > MAX_CONTEXT_SIZE) {
-      const summaryPrompt = {
-        role: 'user',
-        content: `Recall context briefly. Answer following question briefly and accurately:`
-      };
-      context.push(summaryPrompt);
-    }
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
 
-      context.push({ role: 'user', content: userMessage });
-      userInput.value = '';
-      sendButton.disabled = true;
-	sendButton.textContent = "Loading..."; // Change button text
-      try {
-        const options = {
-          method: 'POST',
-          headers: {
-                Authorization: `Bearer ${apiKey}`, // Use Bearer token
+            function appendMessage(content, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.className = `message ${sender}`;
+                if (typeof marked !== 'undefined') {
+                    messageElement.innerHTML = marked.parse(content);
+                } else {
+                    messageElement.textContent = content; // Fallback if marked isn't loaded
+                }
+                messagesContainer.appendChild(messageElement);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            async function sendMessage() {
+                const userMessage = userInput.value.trim();
+                if (!userMessage || !apiKey || !apiUrl) return;
+
+                const selectedModel = modelSelect.value;
+
+                appendMessage(userMessage, 'user');
+
+                if (context.length > MAX_CONTEXT_SIZE) {
+                    const summaryPrompt = {
+                        role: 'user',
+                        content: `Recall context briefly. Answer following question briefly and accurately:`
+                    };
+                    context.push(summaryPrompt);
+                }
+
+                context.push({ role: 'user', content: userMessage });
+                userInput.value = '';
+                sendButton.disabled = true;
+                sendButton.textContent = "Loading...";
+
+                try {
+                    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+        },
+        body: JSON.stringify({
             model: selectedModel,
-            messages: context.slice(-MAX_CONTEXT_SIZE), // Send only the last MAX_CONTEXT_SIZE messages
+            messages: context.slice(-MAX_CONTEXT_SIZE),
             top_p: 0.9,
             temperature: 0.7,
             frequency_penalty: 0.4,
             stream: true
-          })
-        };
+        })
+    });
 
-        const response = await fetch(apiUrl, options);
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.error("API Error:", errorData);
+        appendMessage(`Error: ${response.status} - ${response.statusText}`, 'bot');
+        return;
+    }
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("API Error:", errorData);
-          appendMessage(`Error: ${response.status} - ${response.statusText}`, 'bot');
-          return;
-        }
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let partialResponse = "";
+    let isSummary = false;
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let partialResponse = "";
-        let isSummary = false;
+    const messageElement = document.createElement('div');
+    messageElement.className = `message bot`;
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-        const messageElement = document.createElement('div');
-        messageElement.className = `message bot`;
-        messagesContainer.appendChild(messageElement);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) {
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
             messageElement.innerHTML = marked.parse(partialResponse);
             if (isSummary) {
-              context.pop(); // Remove the summary prompt after receiving the summary
+                context.pop(); // Remove the summary prompt after receiving the summary
             }
             context.push({ role: 'assistant', content: partialResponse });
             break;
-          }
-
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n').filter(line => line.trim() !== '');
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.substring(6));
-                if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
-                  if (context.length > 2 && !isSummary && partialResponse.length === 0 && data.choices[0].delta.content.toLowerCase().includes("summary:") ) {
-                    isSummary = true;
-                  }
-                  partialResponse += data.choices[0].delta.content;
-                  messageElement.innerHTML = marked.parse(partialResponse);
-                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-              } catch (parseError) {
-                console.error("Parse error:", parseError, "Line:", line);
-              }
-            }
-          }
         }
-      } catch (error) {
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n').filter(line => line.trim() !== '');
+
+        for (const line of lines) {
+            if (line.startsWith('data: ')) {
+                try {
+                    const data = JSON.parse(line.substring(6));
+                    if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
+                        if (context.length > 2 && !isSummary && partialResponse.length === 0 && data.choices[0].delta.content.toLowerCase().includes("summary:")) {
+                            isSummary = true;
+                        }
+                        partialResponse += data.choices[0].delta.content;
+                        messageElement.innerHTML = marked.parse(partialResponse);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                } catch (parseError) {
+                    console.error("Parse error:", parseError, "Line:", line);
+                }
+            }
+        }
+    }
+} catch (error) {
         console.error(error);
         appendMessage('Error: Unable to connect to the server.', 'bot');
       } finally {
-        sendButton.disabled = false;
-	sendButton.textContent = "Send"; // Restore button text
-      }
-    }
+                    sendButton.disabled = false;
+                    sendButton.textContent = "Send";
+                }
+            }
 
-            sendButton.addEventListener('click', sendMessage); // Now sendButton will exist
+            sendButton.addEventListener('click', sendMessage); // Correct placement!
             userInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
+                if (event.key === 'Enter' && !event.shiftKey) { // Check if Shift key is not pressed
+                    event.preventDefault(); // Prevent default newline behavior
                     sendMessage();
                 }
             });
         });
-
-    // Load marked.js library
-    const script = document.createElement('script');
-    script.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
-    document.head.appendChild(script);
-
     </script>
 </body>
 </html>
