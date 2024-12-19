@@ -7,7 +7,7 @@
     <style>
 :root {
             --primary-color: #007aff; /* Primary button/input color */
-            --border-color: #d0d0d0; /* Border color */
+            --border-color: #d2d2d7; /* Border color */
             --border-radius: 980px; /* Border radius */
             --font-size: 16px;
             --padding: 10px 14px;
@@ -186,8 +186,8 @@
 #user-input {
     width: 100%;
     padding: 10px 44px 10px 14px;
-    border: 1px solid #d0d0d0;
-    border-radius: var(--border-radius); /* Initial border radius */
+    border: 1px solid #d2d2d7;
+    border-radius: 10px; /* Initial border radius */
     font-size: 16px;
     font-family: var(--font-family);
     box-sizing: border-box;
@@ -196,13 +196,21 @@
     max-height: 200px; /* Set your maximum height */
     overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
     transition: border-radius 0.3s ease; /* Smooth transition for border-radius */
+	transition: box-shadow .3s ease-out;
+    transition-behavior: normal;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    transition-delay: 0s;
 
 }
 
 #user-input:focus {
     outline: none;
-    border-color: #0065FA;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+	border-radius: 10px; /* Initial border radius */
+	border: 1px solid #d2d2d7;
+	box-shadow: 0 0 10px, #dcecf5;
+    //border-color: #0065FA;
+    //box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
 }
 
 #user-input.scrolled {
@@ -229,6 +237,8 @@
     right: 10px;
     width: 36px;
     height: 36px;
+    margin-left: 10px; 
+    border: none; 
     border-radius: 50%;
     background-color: #007aff;
     border: none;
