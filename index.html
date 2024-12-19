@@ -8,7 +8,7 @@
 :root {
             --primary-color: #007aff; /* Primary button/input color */
             --border-color: #d0d0d0; /* Border color */
-            --border-radius: 10px; /* Border radius */
+            --border-radius: 980px; /* Border radius */
             --font-size: 16px;
             --padding: 10px 14px;
             --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
@@ -119,9 +119,7 @@
             scroll-behavior: smooth;
         }
 
-        :root {
-            --border-radius: 980px;
-        }
+  
 
         /* Chat container styles */
         #chat-container {
@@ -143,7 +141,7 @@
         }
 
         .message {
-            border-radius: var(--border-radius);
+            //border-radius: var(--border-radius);
             padding: 10px 14px;
             margin-bottom: 10px;
             word-wrap: break-word;
@@ -163,7 +161,7 @@
         }
 
         /* Locked input container styles */
-        #input-container {
+        #input-container{
     display: flex;
     background-color: #F5F5F7;
     padding: 10px;
@@ -173,26 +171,32 @@
     max-width: 780px;
     width: 100%;
     box-sizing: border-box;
+	align-items: flex-end; 
 }
 
 #input-wrapper {
-     flex-grow: 1; /* Allow remaining space to be taken */
-  position: relative; /* Needed for absolute positioning of the button */
+     flex-grow: 1;
+    position: relative;
+    display: flex; /* Important for aligning textarea and button */
+    flex-direction: column; /* Stack textarea and optional placeholder */
+
 
 }
 
 #user-input {
     width: 100%;
-    padding: 10px 44px 10px 14px; /* Right padding for the button */
+    padding: 10px 44px 10px 14px;
     border: 1px solid #d0d0d0;
-    border-radius: 10px;
+    border-radius: var(--border-radius); /* Initial border radius */
     font-size: 16px;
-	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
-            
+    font-family: var(--font-family);
     box-sizing: border-box;
-    resize: vertical; /* Allow vertical resizing */
-    min-height: 40px; /* Set a minimum height */
-    overflow: hidden; /* Prevent content from overflowing visually */
+    resize: vertical;
+    min-height: 40px;
+    max-height: 200px; /* Set your maximum height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    transition: border-radius 0.3s ease; /* Smooth transition for border-radius */
+
 }
 
 #user-input:focus {
@@ -201,11 +205,28 @@
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
 }
 
+#user-input.scrolled {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#user-input::-webkit-scrollbar {
+    width: 5px; /* Adjust the width as needed */
+}
+
+#user-input::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners for the thumb */
+}
+
+#user-input::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color of the scrollbar track */
+}
+
 .send-button {
     position: absolute;
-    top: 50%;
-    right: 10px; /* Adjust as needed */
-    transform: translateY(-50%);
+    bottom: 10px; /* Position at the bottom */
+    right: 10px;
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -235,18 +256,7 @@
 	.message, .send-button, #user-input {
 	    border-radius: var(--border-radius);
 	}
-        /* Model dropdown styles */
-        #model-select {
-            margin-left: 10px;
-            padding: 8px;
-            font-size: 16px;
-            border-radius: var(--border-radius);
-            border: 1px solid #d0d0d0;
-            background-color: #ffffff;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
+       
 
 	/* Styles omitted for brevity */
         #settings-container {
@@ -264,6 +274,20 @@
             font-family: var(--font-family);
             //box-sizing: border-box;
 	}
+
+ /* Model dropdown styles */
+        #model-select {
+    margin-left: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: var(--border-radius);
+    border: 1px solid #d0d0d0;
+    background-color: #ffffff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    flex-shrink: 0; /* Prevent shrinking */
+}
 
     </style>
 </head>
@@ -343,9 +367,13 @@ showSettingsButton.addEventListener('click', () => {
             });
 
             userInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
+  	  this.style.height = 'auto';
+   	 this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+
+  	  // Check if the content height is greater than the line height
+  	  const lineHeight = parseInt(window.getComputedStyle(this).lineHeight);
+  	  this.classList.toggle('multiline', this.scrollHeight > lineHeight);
+	});
 
             function appendMessage(content, sender) {
                 const messageElement = document.createElement('div');
