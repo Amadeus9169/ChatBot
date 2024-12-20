@@ -336,55 +336,79 @@
       const messagesContainer = document.getElementById('messages');
       const userInput = document.getElementById('user-input');
       const sendButton = document.getElementById('send-button');
-      const apiKeyInput = document.getElementById('api-key');
-      const apiUrlInput = document.getElementById('api-url');
-      const showSettingsButton = document.getElementById('show-settings');
-            const settingsContainer = document.getElementById('settings-container');
-            const saveApiButton = document.getElementById('save-api');
-      const modelSelect = document.getElementById('model-select');
+const apiKeyInput = document.getElementById('api-key');
+const apiUrlInput = document.getElementById('api-url');
+const showSettingsButton = document.getElementById('show-settings');
+const settingsContainer = document.getElementById('settings-container');
+const saveApiButton = document.getElementById('save-api');
+const modelSelect = document.getElementById('model-select');
+
+// On page load
+let apiKey = getCookie('API_KEY') || localStorage.getItem('apiKey');
+let apiUrl = getCookie('API_URL') || localStorage.getItem('apiUrl');
+let selectedModel = getCookie('SELECTED_MODEL') || localStorage.getItem('selectedModel');
+
+if (selectedModel) {
+    modelSelect.value = selectedModel; // Set the selected model in the dropdown
+}
 
 
-      let apiKey = localStorage.getItem('apiKey');
-      let apiUrl = localStorage.getItem('apiUrl');
-      let context = [];
-      const MAX_CONTEXT_SIZE = 3;
-
-
+let context = [];
+const MAX_CONTEXT_SIZE = 3;
 
 // Check for existing API credentials
-      if (apiKey && apiUrl) {
-        // Hide settings container
-        settingsContainer.style.display = 'none';
-      } else {
-        // Show settings container
-        settingsContainer.style.display = 'block';
-      }
+if (apiKey && apiUrl) {
+    // Hide settings container
+    settingsContainer.style.display = 'none';
+} else {
+    // Show settings container
+    settingsContainer.style.display = 'block';
+}
 
 showSettingsButton.addEventListener('click', () => {
-                settingsContainer.style.display = (settingsContainer.style.display === 'none') ? 'block' : 'none';
-            });
+    settingsContainer.style.display = (settingsContainer.style.display === 'none') ? 'block' : 'none';
+});
+
+saveApiButton.addEventListener('click', () => {
+    apiKey = apiKeyInput.value;
+    apiUrl = apiUrlInput.value;
+    selectedModel = modelSelect.value; // Get the selected model
+
+    // Set cookies with 365 days expiration
+    setCookie('API_KEY', apiKey, 365);
+    setCookie('API_URL', apiUrl, 365);
+    setCookie('SELECTED_MODEL', selectedModel, 365);
+
+    // Optionally, you can still store in localStorage for fallback
+    localStorage.setItem('apiKey', apiKey);
+    localStorage.setItem('apiUrl', apiUrl);
+    localStorage.setItem('selectedModel', selectedModel);
+
+    settingsContainer.style.display = 'none'; // Hide after saving
+});
 
 
-   saveApiButton.addEventListener('click', () => {
-                apiKey = apiKeyInput.value;
-                apiUrl = apiUrlInput.value;
-                localStorage.setItem('apiKey', apiKey);
-                localStorage.setItem('apiUrl', apiUrl);
-                settingsContainer.style.display = 'none'; // Hide after saving
-            });
 
-            userInput.addEventListener('input', () => {
-                sendButton.disabled = userInput.value.trim() === '';
-            });
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
 
-            userInput.addEventListener('input', function() {
-  	  this.style.height = 'auto';
-   	 this.style.height = Math.min(this.scrollHeight, 200) + 'px';
-
-  	  // Check if the content height is greater than the line height
-  	  const lineHeight = parseInt(window.getComputedStyle(this).lineHeight);
-  	  this.classList.toggle('multiline', this.scrollHeight > lineHeight);
-	});
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
 
             function appendMessage(content, sender) {
                 const messageElement = document.createElement('div');
