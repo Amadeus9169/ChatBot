@@ -305,11 +305,11 @@
 <body>
 
   <button id="show-settings">API</button> <div id="settings-container">
-        <label for="api-key">API Key:</label>
-<input type="text" id="api-key" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
+        <label for="api-key">KEY: </label>
+<input type="text" id="api-key" style="width: 200px;" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
 
-<label for="api-url">API URL:</label>
-<input type="text" id="api-url" style="width: 500px;" value="https://api.siliconflow.cn/v1/chat/completions"><br><br>
+<label for="api-url">URL: </label>
+<input type="text" id="api-url" style="width: 200px;" value="https://api.siliconflow.cn/v1/chat/completions"><br><br>
 
         <button id="save-api">Save API</button>
     </div>
@@ -322,9 +322,10 @@
         <button class="send-button" id="send-button" disabled>Send</button>
       </div>
      <select id="model-select">
+	<option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
             <option value="Vendor-A/Qwen/Qwen2.5-72B-Instruct">VQwen2.5.72</option>
             <option value="Qwen/Qwen2.5-7B-Instruct">FQwen2.5.7</option>
-            <option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
+            
             <option value="Qwen/Qwen2.5-Coder-32B-Instruct">QwenCoder32</option>
         </select>
     </div>
