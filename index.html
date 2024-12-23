@@ -184,39 +184,32 @@
 }
 
 #user-input {
-    width: 100%;
-    padding: 10px 44px 10px 14px;
-    border: 1px solid #d2d2d7;
-    border-radius: 10px; /* Initial border radius */
-    font-size: 16px;
-    font-family: var(--font-family);
-    box-sizing: border-box;
-    resize: vertical;
-    min-height: 40px;
-    max-height: 200px; /* Set your maximum height */
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
-    transition: border-radius 0.3s ease; /* Smooth transition for border-radius */
-	transition: box-shadow .3s ease-out;
-    transition-behavior: normal;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-out;
-    transition-delay: 0s;
-
+  width: 100%;
+  padding: 10px 44px 10px 14px;
+  border: 1px solid #d2d2d7;
+  border-radius: 10px; /* Initial border radius */
+  font-size: 16px;
+  font-family: var(--font-family);
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 40px;
+  max-height: 200px; /* Set your maximum height */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+  transition: all 0.5s ease-out; /* Combined transition for all properties */
 }
 
 #user-input:focus {
-    outline: none;
-	border-radius: 10px; /* Initial border radius */
-	border: 1px solid #d2d2d7;
-	box-shadow: 0 0 10px, #dcecf5;
-    //border-color: #0065FA;
-    //box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+  outline: none;
+  border-radius: 10px; /* Maintains border radius on focus */
+  border: 1px solid #d2d2d7;
+  box-shadow: 0 0 10px rgba(220, 223, 245, 0.5); /* Updated box-shadow for better visibility */
 }
 
 #user-input.scrolled {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
+
 
 #user-input::-webkit-scrollbar {
     width: 5px; /* Adjust the width as needed */
@@ -343,6 +336,13 @@ const settingsContainer = document.getElementById('settings-container');
 const saveApiButton = document.getElementById('save-api');
 const modelSelect = document.getElementById('model-select');
 
+
+	userInput.addEventListener('input', function() {
+ 	 this.style.height = 'auto';
+	  this.style.height = (this.scrollHeight) + 'px';
+	});
+
+
 // On page load
 let apiKey = getCookie('API_KEY') || localStorage.getItem('apiKey');
 let apiUrl = getCookie('API_URL') || localStorage.getItem('apiUrl');
@@ -402,6 +402,8 @@ function setCookie(name, value, days) {
 
 function checkInput() {
         sendButton.disabled = userInput.value.trim() === "";
+	this.style.height = 'auto'; // Reset height to recalculate
+  this.style.height = (this.scrollHeight) + 'px'; // Set height to scrollHeight
     }
 
     sendButton.addEventListener('click', sendMessage);
@@ -551,6 +553,7 @@ function getCookie(name) {
 	checkInput(); // Check input after message is sent
                 }
             }
+
 
             
 	sendButton.addEventListener('click', sendMessage); // Correct placement!
