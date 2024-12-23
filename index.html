@@ -6,13 +6,13 @@
     <title>Chatbot</title>
     <style>
 :root {
-            --primary-color: #007aff; /* Primary button/input color */
-            --border-color: #d2d2d7; /* Border color */
-            --border-radius: 980px; /* Border radius */
-            --font-size: 16px;
-            --padding: 10px 14px;
-            --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
-        }
+  --primary-color: #007aff; /* Primary button/input color */
+  --border-color: #d2d2d7; /* Border color */
+  --border-radius: 980px; /* Border radius */
+  --line-height: 1.4705882353; /* Line-height for body text */
+  --letter-spacing: -0.022em; /* Letter-spacing for body text */
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
+}
 
         input[type="text"],
         textarea,
@@ -55,20 +55,21 @@
         }
         /* iOS 风格的全局样式 */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
-            font-size: 16px;
-            line-height: 1.4705882353;
-            letter-spacing: -0.022em;
-            color: rgb(29, 29, 31);
-            background-color: rgb(245, 245, 247);
-            margin: 0;
-            padding: 0;
-            height: 100vh; /* Important: Set body height to 100vh */
-            overflow: hidden; /* Prevent body scrolling */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-weight: 400;
-        }
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: var(--line-height);
+  letter-spacing: var(--letter-spacing);
+  color: rgb(29, 29, 31);
+  background-color: rgb(245, 245, 247);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  transition: all 0.3s ease-out; /* Add generic transition for smooth animations */
+}
 
         @supports (-webkit-hyphens: none) and (not (-ms-accelerator: true)) and (not (windows: true)) {
             body {
@@ -132,7 +133,7 @@
 
         #messages {
             flex: 1;
-            padding: 20px;
+            padding: 20px 15px;
             overflow-y: auto;
             max-width: 95%;
 	bottom: 5px;
@@ -146,6 +147,7 @@
             margin-bottom: 10px;
             word-wrap: break-word;
             max-width: 95%;
+	transition: background-color 0.3s ease-out; /* Example transition */
         }
 
         .message.user {
@@ -161,18 +163,16 @@
         }
 
         /* Locked input container styles */
-        #input-container{
-    display: flex;
-    background-color: #F5F5F7;
-    padding: 10px;
-    //border-top: 1px solid #d0d0d0;
-    position: sticky;
-    bottom: 0;
-    max-width: 780px;
-    width: 100%;
-    box-sizing: border-box;
-	align-items: flex-end; 
-	
+        #input-container {
+  display: flex;
+  background-color: #F5F5F7;
+  padding: 15px 10px;
+  position: sticky;
+  bottom: 0;
+  max-width: 780px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: flex-end;
 }
 
 #input-wrapper {
@@ -186,10 +186,10 @@
 
 #user-input {
   width: 100%;
-  padding: 10px 44px 10px 14px;
+  padding: 15px 14px;
   border: 1px solid #d2d2d7;
   border-radius: 10px; /* Initial border radius */
-  font-size: 16px;
+  font-size: 14px;
   font-family: var(--font-family);
   box-sizing: border-box;
   resize: vertical;
@@ -226,22 +226,21 @@
 }
 
 .send-button {
-    position: absolute;
-    bottom: 10px; /* Position at the bottom */
+     position: absolute;
+    bottom: 13px; /* Position at the bottom */
     right: 10px;
     width: 36px;
     height: 36px;
-    margin-left: 10px; 
-    border: none; 
+    border: none;
     border-radius: 50%;
     background-color: #007aff;
-    border: none;
     color: white;
     font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+	transition: background-color 0.3s ease-out, transform 0.1s ease-out; /* Example transitions */
 }
 	
 	.send-button:hover {
@@ -270,43 +269,56 @@
             margin-top: 10px;
         }
 
-	#show-settings{
-		padding: 5px;
+	#show-settings {
+  padding: 5px 10px; /* Adjust padding for icon button */
+  background-color: #ffffff; /* Consistent background color */
+  border: none; /* No border for icon button */
+  cursor: pointer;
+  color: #333; /* Icon color */
+  font-size: 18px; /* Larger font for icon */
+}
 
-            border-radius: var(--border-radius);
-            font-size: 14px;
-            font-family: var(--font-family);
-            //box-sizing: border-box;
-	}
+#show-settings:hover {
+  background-color: #f5f5f7; /* Lighten background on hover */
+}
+
+.message, .send-button, #user-input, #model-select-button, #show-settings {
+  border-radius: var(--border-radius); /* Consistent border radius */
+}
+
+#model-selector {
+  display: flex; /* Allow button and select side-by-side */
+  margin-left: 10px;
+ align-items: center; /* Important for alignment */
+}
+
+#model-select-button {
+  padding: 8px 10px; /* Adjust padding for button */
+  font-size: 14px; /* Smaller font for button text */
+  border: 1px solid #d0d0d0;
+  background-color: #ffffff;
+  cursor: pointer;
+  color: #333; /* Adjust button text color */
+}
+
 
  /* Model dropdown styles */
-        #model-select {
-    margin-left: 10px;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: var(--border-radius);
-    border: 1px solid #d0d0d0;
-    background-color: #ffffff;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    flex-shrink: 0; /* Prevent shrinking */
+       #model-select {
+  margin-left: 5px; /* Spacing between button and select */
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #d0d0d0;
+  background-color: #ffffff;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
     </style>
 </head>
 
 <body>
-
-  <button id="show-settings">API</button> <div id="settings-container">
-        <label for="api-key">KEY: </label>
-<input type="text" id="api-key" style="width: 200px;" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
-
-<label for="api-url">URL: </label>
-<input type="text" id="api-url" style="width: 200px;" value="https://api.siliconflow.cn/v1/chat/completions"><br><br>
-
-        <button id="save-api">Save API</button>
-    </div>
 
   <div id="chat-container">
     <div id="messages"></div>
@@ -315,13 +327,25 @@
         <textarea id="user-input"></textarea>
         <button class="send-button" id="send-button" disabled>Send</button>
       </div>
-     <select id="model-select">
+
+<select id="model-select">
 	<option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
             <option value="Vendor-A/Qwen/Qwen2.5-72B-Instruct">VQwen2.5.72</option>
             <option value="Qwen/Qwen2.5-7B-Instruct">FQwen2.5.7</option>
             
             <option value="Qwen/Qwen2.5-Coder-32B-Instruct">QwenCoder32</option>
         </select>
+
+<button id="show-settings">⚙️</button> <div id="settings-container">
+        <label for="api-key">KEY: </label>
+<input type="text" id="api-key" style="width: 200px;" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
+
+<label for="api-url">URL: </label>
+<input type="text" id="api-url" style="width: 200px;" value="https://api.siliconflow.cn/v1/chat/completions"><br><br>
+
+        <button id="save-api">Save API</button>
+    </div>
+     
     </div>
   </div>
 
@@ -404,6 +428,12 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+modelSelect.addEventListener('change', (event) => {
+  const selectedModel = event.target.value;
+  setCookie('SELECTED_MODEL', selectedModel, 365);
+  // Optionally, update localStorage as well
+  localStorage.setItem('selectedModel', selectedModel);
+});
 
 function checkInput() {
         sendButton.disabled = userInput.value.trim() === "";
