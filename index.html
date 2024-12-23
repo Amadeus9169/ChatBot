@@ -367,7 +367,11 @@ if (apiKey && apiUrl) {
 }
 
 showSettingsButton.addEventListener('click', () => {
-    settingsContainer.style.display = (settingsContainer.style.display === 'none') ? 'block' : 'none';
+  if (settingsContainer.style.display === 'none') {
+    settingsContainer.style.display = 'block';
+  } else {
+    settingsContainer.style.display = 'none';
+  }
 });
 
 saveApiButton.addEventListener('click', () => {
