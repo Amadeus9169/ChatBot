@@ -164,15 +164,19 @@
 
         /* Locked input container styles */
         #input-container {
-  display: flex;
-  background-color: #F5F5F7;
-  padding: 15px 10px;
-  position: sticky;
-  bottom: 0;
-  max-width: 780px;
-  width: 100%;
-  box-sizing: border-box;
-  align-items: flex-end;
+    display: flex;
+    background-color: #F5F5F7;
+    padding: 10px; /* Reduced padding for mobile */
+    position: fixed; /* Use fixed for better mobile handling */
+    bottom: 15px; /* Added bottom spacing */
+    left: 0; /* Ensure it spans the full width */
+    right: 0;
+    box-sizing: border-box;
+    align-items: flex-end; /* Center vertically */
+    z-index: 100; /* Ensure it's above other content */
+    padding-bottom: env(safe-area-inset-bottom); /* Account for safe area */
+   max-width: 780px; /* Added max-width */
+    margin: 0 auto; /* Center the container */
 }
 
 #input-wrapper {
@@ -185,25 +189,25 @@
 }
 
 #user-input {
-  width: 100%;
-  padding: 15px 14px;
-  border: 1px solid #d2d2d7;
-  border-radius: 10px; /* Initial border radius */
-  font-size: 14px;
-  font-family: var(--font-family);
-  box-sizing: border-box;
-  resize: vertical;
-  min-height: 40px;
-  max-height: 200px; /* Set your maximum height */
-  overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
-  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); /* Smooth transition with easing */
+    width: 100%;
+    padding: 10px 12px; /* Reduced padding */
+    border: 1px solid #d2d2d7;
+    border-radius: 10px;
+    font-size: 15px; /* Increased font size for mobile */
+    font-family: var(--font-family);
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 44px; /* Minimum height for touch */
+    max-height: 150px; /* Reduced max height */
+    overflow-y: auto;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); /* Smooth transition with easing */
 }
 
 #user-input:focus {
   outline: none;
   border-radius: 20px; /* Maintains border radius on focus */
   border: 1px solid #d2d2d7;
-  box-shadow: 0 0 20px rgba(220, 223, 245, 0.5); /* Updated box-shadow for better visibility */
+  box-shadow: 0 0 15px rgba(220, 223, 245, 0.5); /* Updated box-shadow for better visibility */
 }
 
 #user-input.scrolled {
@@ -227,7 +231,7 @@
 
 .send-button {
      position: absolute;
-    bottom: 13px; /* Position at the bottom */
+    bottom: 9px; /* Position at the bottom */
     right: 10px;
     width: 36px;
     height: 36px;
@@ -293,10 +297,11 @@
 }
 
 #model-select-button {
-  padding: 8px 10px; /* Adjust padding for button */
+  padding: 8px 5px; /* Adjust padding for button */
   font-size: 14px; /* Smaller font for button text */
-  border: 1px solid #d0d0d0;
-  background-color: #ffffff;
+  border: none; /* 1px solid #d0d0d0; */
+  //background-color: #ffffff;
+  background: transparent; /* Transparent background */
   cursor: pointer;
   color: #333; /* Adjust button text color */
 }
@@ -304,15 +309,21 @@
 
  /* Model dropdown styles */
        #model-select {
-  margin-left: 5px; /* Spacing between button and select */
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #d0d0d0;
-  background-color: #ffffff;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  flex-shrink: 0; /* Prevent shrinking */
+    padding: 8px 25px 8px 10px; /* Adjust padding for arrow */
+    font-size: 16px;
+    border: 1px solid #d0d0d0;
+    background-color: #ffffff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>"); /* Add arrow icon */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+    width: 40px; /* Set a fixed width */
+    text-indent: -9999px; /* Hide the text by indenting it off-screen */
+    overflow: hidden; /* Hide any overflowing text */
 }
 
     </style>
