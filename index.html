@@ -399,6 +399,27 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+
+function checkInput() {
+        sendButton.disabled = userInput.value.trim() === "";
+    }
+
+    sendButton.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('input', checkInput); // Listen for input changes
+    userInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Initial check when the page loads
+    checkInput();
+
+
+
+
 function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
@@ -410,7 +431,7 @@ function getCookie(name) {
     return null;
 }
 
-            function appendMessage(content, sender) {
+	function appendMessage(content, sender) {
                 const messageElement = document.createElement('div');
                 messageElement.className = `message ${sender}`;
                 if (typeof marked !== 'undefined') {
@@ -422,10 +443,16 @@ function getCookie(name) {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
 
-            async function sendMessage() {
-                const userMessage = userInput.value.trim();
-                if (!userMessage || !apiKey || !apiUrl) return;
+	async function sendMessage() {
+        const userMessage = userInput.value.trim();
+   	 if (!userMessage || !apiKey || !apiUrl) {
+     	   sendButton.disabled = true; // Keep button disabled if API info is missing
+     	   sendButton.textContent = "Send";
+  	      return;
+  	  }
 
+   	 sendButton.disabled = true; // Disable during sending
+    	sendButton.textContent = "Loading...";
                 const selectedModel = modelSelect.value;
 
                 appendMessage(userMessage, 'user');
@@ -438,15 +465,16 @@ function getCookie(name) {
                 if (context.length > MAX_CONTEXT_SIZE) {
                     const summaryPrompt = {
                         role: 'user',
-                        content: `Recall context briefly. Answer following question briefly and accurately:`
+                        content: `Recall context briefly. `
                     };
                     context.push(summaryPrompt);
                 }
 
                 context.push({ role: 'user', content: userMessage });
                 userInput.value = '';
-                sendButton.disabled = true;
+               
                 sendButton.textContent = "Loading...";
+	sendButton.disabled = true;
 
                 try {
                     const response = await fetch(apiUrl, {
@@ -520,14 +548,17 @@ function getCookie(name) {
       } finally {
                     sendButton.disabled = false;
                     sendButton.textContent = "Send";
+	checkInput(); // Check input after message is sent
                 }
             }
 
-            sendButton.addEventListener('click', sendMessage); // Correct placement!
+            
+	sendButton.addEventListener('click', sendMessage); // Correct placement!
             userInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' && !event.shiftKey) { // Check if Shift key is not pressed
                     event.preventDefault(); // Prevent default newline behavior
                     sendMessage();
+	
                 }
             });
         });
