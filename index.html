@@ -120,7 +120,7 @@
             scroll-behavior: smooth;
         }
 
-  
+
 
         /* Chat container styles */
         #chat-container {
@@ -188,26 +188,26 @@
 
 }
 
+
 #user-input {
     width: 100%;
-    padding: 10px 12px; /* Reduced padding */
+    padding: 10px 12px;
     border: 1px solid #d2d2d7;
     border-radius: 10px;
-    font-size: 15px; /* Increased font size for mobile */
+    font-size: 15px; /* Slightly larger font size is often better on mobile */
     font-family: var(--font-family);
     box-sizing: border-box;
     resize: vertical;
-    min-height: 44px; /* Minimum height for touch */
-    max-height: 150px; /* Reduced max height */
+    min-height: 44px; /* Important for touch targets */
+    max-height: 150px;
     overflow-y: auto;
-    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); /* Smooth transition with easing */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* More focused transition */
 }
 
 #user-input:focus {
-  outline: none;
-  border-radius: 20px; /* Maintains border radius on focus */
-  border: 1px solid #d2d2d7;
-  box-shadow: 0 0 15px rgba(220, 223, 245, 0.5); /* Updated box-shadow for better visibility */
+    outline: none;
+    border-color: #007bff; /* A standard focus color (blue) */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* More subtle and standard box-shadow */
 }
 
 #user-input.scrolled {
@@ -215,18 +215,17 @@
   border-bottom-right-radius: 0;
 }
 
-
 #user-input::-webkit-scrollbar {
-    width: 5px; /* Adjust the width as needed */
+    width: 5px;
 }
 
 #user-input::-webkit-scrollbar-thumb {
-    background-color: #888; /* Color of the scrollbar thumb */
-    border-radius: 6px; /* Rounded corners for the thumb */
+    background-color: #888;
+    border-radius: 6px;
 }
 
 #user-input::-webkit-scrollbar-track {
-    background-color: #f1f1f1; /* Color of the scrollbar track */
+    background-color: #f1f1f1;
 }
 
 .send-button {
@@ -246,24 +245,24 @@
     justify-content: center;
 	transition: background-color 0.3s ease-out, transform 0.1s ease-out; /* Example transitions */
 }
-	
+
 	.send-button:hover {
 	    background-color: #005eff;
 	}
-	
+
 	.send-button:active {
 	    background-color: #004de0;
 	}
-	
+
 	.send-button:disabled {
 	    background-color: #c7c7cc;
 	    cursor: not-allowed;
 	}
-	
+
 	.message, .send-button, #user-input {
 	    border-radius: var(--border-radius);
 	}
-       
+
 
 	/* Styles omitted for brevity */
         #settings-container {
@@ -343,7 +342,7 @@
 	<option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
             <option value="Vendor-A/Qwen/Qwen2.5-72B-Instruct">VQwen2.5.72</option>
             <option value="Qwen/Qwen2.5-7B-Instruct">FQwen2.5.7</option>
-            
+
             <option value="Qwen/Qwen2.5-Coder-32B-Instruct">QwenCoder32</option>
         </select>
 
@@ -356,7 +355,7 @@
 
         <button id="save-api">Save API</button>
     </div>
-     
+
     </div>
   </div>
 
@@ -520,7 +519,7 @@ function getCookie(name) {
 
                 context.push({ role: 'user', content: userMessage });
                 userInput.value = '';
-               
+
                 sendButton.textContent = "Loading...";
 	sendButton.disabled = true;
 
@@ -601,13 +600,13 @@ function getCookie(name) {
             }
 
 
-            
+
 	sendButton.addEventListener('click', sendMessage); // Correct placement!
             userInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' && !event.shiftKey) { // Check if Shift key is not pressed
                     event.preventDefault(); // Prevent default newline behavior
                     sendMessage();
-	
+
                 }
             });
         });
