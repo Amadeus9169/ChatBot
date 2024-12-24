@@ -6,89 +6,95 @@
     <title>Chatbot</title>
     <style>
 :root {
-  --primary-color: #007aff; /* Primary button/input color */
-  --border-color: #d2d2d7; /* Border color */
-  --border-radius: 980px; /* Border radius */
-  --line-height: 1.4705882353; /* Line-height for body text */
-  --letter-spacing: -0.022em; /* Letter-spacing for body text */
-  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
+    --primary-color: #007aff;
+    --border-color: #d2d2d7;
+    --border-radius: 980px; /* Use 50% for rounded corners */
+    --line-height: 1.4705882353;
+    --letter-spacing: -0.022em;
+    --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
+    --padding: 10px; /* Define padding */
+    --font-size: 16px; /* Define font size */
 }
 
-        input[type="text"],
-        textarea,
-        button,
-        select { /* Apply to all these elements */
-            padding: var(--padding);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: var(--font-size);
-            font-family: var(--font-family);
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth transition */
-        }
-        button:hover {
-            background-color: #005eff;
-        }
-        button:active {
-            background-color: #004de0;
-        }
-
-        button:disabled {
-            background-color: #c7c7cc;
-            cursor: not-allowed;
-        }
-        textarea{
-            resize: vertical; /* Allow vertical resizing */
-            min-height: 40px; /* Set a minimum height */
-            overflow: hidden; /* Prevent content from overflowing visually */
-        }
-        textarea:focus {
-            outline: none;
-            border-color: #0065FA;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
-        }
-        /* iOS 风格的全局样式 */
-        body {
-  font-family: var(--font-family);
-  font-size: 16px;
-  line-height: var(--line-height);
-  letter-spacing: var(--letter-spacing);
-  color: rgb(29, 29, 31);
-  background-color: rgb(245, 245, 247);
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 400;
-  transition: all 0.3s ease-out; /* Add generic transition for smooth animations */
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    letter-spacing: var(--letter-spacing);
+    color: rgb(29, 29, 31);
+    background-color: rgb(245, 245, 247);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Use min-height to allow content to expand */
+    /* overflow: hidden; Remove this unless absolutely necessary*/
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    transition: all 0.3s ease-out;
 }
 
-        @supports (-webkit-hyphens: none) and (not (-ms-accelerator: true)) and (not (windows: true)) {
-            body {
-                font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-            }
-        }
+input[type="text"],
+textarea,
+button,
+select {
+    padding: var(--padding);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #005eff;
+}
+
+button:active {
+    background-color: #004de0;
+}
+
+button:disabled {
+    background-color: #c7c7cc;
+    cursor: not-allowed;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 40px;
+    overflow: hidden;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #0065FA;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+}
+
+@supports (-webkit-hyphens: none) and (not (-ms-accelerator: true)) and (not (windows: true)) {
+    body {
+        font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    }
+}
 
         @media (max-width: 480px) {
     body {
-        font-size: 16px; /* Smaller font size for better readability */
-        padding: 10px; /* Adjust padding for smaller screens */
+        font-size: 16px;
+        padding: 10px;
     }
+}
 
-        @media (min-width: 768px) {
-            body {
-                font-size: 19px;
-                padding: 5px;
-            }
-        }
+/* Styles for larger screens (tablets and desktops) */
+@media (min-width: 768px) {
+    body {
+        font-size: 19px;
+        padding: 5px;
+    }
+}
 
 
         h1, h2, h3 {
