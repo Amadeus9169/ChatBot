@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>渝欢婆菜品上架检查表 - 优化版</title>
+    <title>渝欢婆菜品上架检查表</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -14,20 +14,19 @@
             font-family: 'Microsoft YaHei', sans-serif;
         }
         body {
-            background: linear-gradient(135deg, #f0f2f5, #e4e7eb);
+            background-color: #f8f9fa;
             color: #333;
             line-height: 1.6;
-            padding: 15px;
-            min-height: 100vh;
+            padding: 10px;
+            background: linear-gradient(135deg, #f9f9f9, #eef2f7);
         }
         .container {
-            max-width: 1000px;
+            max-width: 100%;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            position: relative;
         }
         header {
             background: linear-gradient(135deg, #d32f2f, #b71c1c);
@@ -37,127 +36,98 @@
             position: relative;
         }
         h1 {
-            font-size: 26px;
+            font-size: 24px;
             margin-bottom: 8px;
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            letter-spacing: 0.5px;
         }
         .subtitle {
-            font-size: 15px;
+            font-size: 14px;
             opacity: 0.9;
             margin-top: 5px;
-            letter-spacing: 0.3px;
         }
         .info-bar {
-            background-color: #f8f9fa;
+            background-color: #f5f5f5;
             padding: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
-            border-bottom: 1px solid #eaeaea;
+            border-bottom: 1px solid #eee;
         }
         .info-item {
+            flex: 1;
             min-width: 150px;
         }
         .info-item label {
             display: block;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: #555;
             font-size: 14px;
         }
         .info-item input, .info-item select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: border-color 0.3s;
             background: white;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
         .info-item input:focus, .info-item select:focus {
             border-color: #d32f2f;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
         }
         .static-text {
             display: none;
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             font-size: 14px;
             border: 1px solid transparent;
-            border-radius: 8px;
+            border-radius: 6px;
             background: white;
             min-height: 40px;
             word-break: break-word;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
-        
-        /* 方形布局容器 */
-        .square-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding: 15px;
-        }
-        .column {
-            flex: 1;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            background: linear-gradient(135deg, #388e3c, #2e7d32);
-            color: white;
-            padding: 12px 15px;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .card-content {
-            padding: 15px;
-        }
-        
         .table-container {
             overflow-x: auto;
+            padding: 10px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin: 10px 0;
             font-size: 14px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         th, td {
             border: 1px solid #e0e0e0;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             vertical-align: middle;
         }
         th {
-            background-color: #f5f7fa;
+            background-color: #f1f1f1;
             font-weight: bold;
             color: #333;
             font-size: 14px;
         }
+        .category-header {
+            background-color: #e8f5e9 !important;
+        }
+        .category-header td strong {
+             display: block;
+             margin-bottom: 8px;
+             font-weight: bold;
+             color: #2e7d32;
+        }
         .checkbox-cell {
             text-align: center;
             vertical-align: middle;
-            width: 40px;
+            width: 30px;
         }
         input[type="checkbox"] {
-            transform: scale(1.4);
+            transform: scale(1.3);
             cursor: pointer;
             accent-color: #388e3c;
         }
@@ -168,47 +138,48 @@
         textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             resize: vertical;
             min-height: 80px;
-            font-size: 13.5px;
+            font-size: 14px;
+            text-align: center;
             transition: border-color 0.3s;
-            background: #fafafa;
+            /* 添加文本自动换行 */
+            white-space: pre-wrap; /* 保留换行符 */
+            word-break: break-word; /* 允许单词内换行 */
         }
         textarea:focus {
             border-color: #388e3c;
             outline: none;
-            box-shadow: 0 0 0 2px rgba(56, 142, 60, 0.15);
-            background: white;
+            box-shadow: 0 0 0 2px rgba(56, 142, 60, 0.2);
         }
-        
         .actions {
             display: flex;
             justify-content: center;
             padding: 20px;
             gap: 20px;
-            background-color: #f8f9fa;
+            background-color: #f5f5f5;
             border-top: 1px solid #eee;
             flex-wrap: wrap;
         }
         .btn {
-            padding: 13px 28px;
+            padding: 12px 25px;
             font-size: 16px;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 600;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         .btn:active {
             transform: translateY(0);
@@ -219,7 +190,7 @@
         }
         .btn-screenshot:hover {
             background: linear-gradient(135deg, #2e7d32, #1b5e20);
-            box-shadow: 0 6px 12px rgba(46, 125, 50, 0.25);
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
         }
         .btn-preview {
             background: linear-gradient(135deg, #1976d2, #0d47a1);
@@ -227,7 +198,7 @@
         }
         .btn-preview:hover {
             background: linear-gradient(135deg, #1565c0, #0b3d91);
-            box-shadow: 0 6px 12px rgba(25, 118, 210, 0.25);
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
         }
         .btn-reset {
             background: white;
@@ -236,13 +207,13 @@
         }
         .btn-reset:hover {
             background-color: #f8f8f8;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         footer {
             text-align: center;
             padding: 15px;
             color: #666;
-            font-size: 13px;
+            font-size: 12px;
             background-color: #f9f9f9;
             border-top: 1px solid #eee;
         }
@@ -254,7 +225,22 @@
             font-weight: 500;
             min-height: 40px;
         }
-        
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            width: 100%;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 10px 0;
+            display: none;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #388e3c);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
         /* 截图预览模态框 */
         .preview-modal {
             display: none;
@@ -263,7 +249,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.92);
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             padding: 20px;
             overflow: auto;
@@ -275,18 +261,17 @@
             max-width: 800px;
             width: 90%;
             margin: 20px auto;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 20px;
             position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
         }
         .preview-image {
             width: 100%;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             display: block;
             margin: 0 auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         .close-btn {
             position: absolute;
@@ -296,19 +281,14 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 18px;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
-            transition: all 0.3s;
-        }
-        .close-btn:hover {
-            transform: rotate(90deg);
-            background: #d32f2f;
         }
         .preview-actions {
             display: flex;
@@ -319,9 +299,9 @@
         }
         .preview-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #2e7d32;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
         }
         
@@ -332,7 +312,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -341,48 +321,54 @@
         }
         .progress-content {
             background: white;
-            padding: 35px;
-            border-radius: 12px;
+            padding: 30px;
+            border-radius: 10px;
             text-align: center;
-            max-width: 320px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         .spinner {
             border: 5px solid #f3f3f3;
             border-top: 5px solid #388e3c;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 25px;
+            margin: 0 auto 20px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        /* 方形截图模式 */
-        .screenshot-mode .square-container {
-            display: flex;
-            flex-wrap: wrap;
-            max-height: 800px;
-            overflow: hidden;
-        }
-        
-        /* 响应式设计 */
+
+        /* 手机端特别优化 */
         @media (max-width: 768px) {
-            .info-bar {
-                grid-template-columns: 1fr;
+            .info-item {
+                min-width: 100%;
+            }
+            th, td {
+                padding: 10px;
+                font-size: 13px;
+            }
+            .note-cell {
+                min-width: 140px;
+            }
+            textarea {
+                min-height: 140px;
+                font-size: 13px;
+            }
+            .category-header td:first-child {
+                font-size: 14px;
             }
             .btn {
-                padding: 12px 20px;
-                font-size: 15px;
-                min-width: 160px;
+                padding: 10px 20px;
+                font-size: 14px;
+                min-width: 140px;
             }
             .actions {
                 flex-direction: column;
                 align-items: center;
-                gap: 15px;
+                gap: 12px;
             }
             .preview-content {
                 width: 95%;
@@ -390,10 +376,7 @@
             }
             .preview-actions .btn {
                 flex: 1;
-                min-width: 140px;
-            }
-            .square-container {
-                flex-direction: column;
+                min-width: 120px;
             }
         }
         
@@ -410,6 +393,32 @@
                 box-shadow: none;
                 border-radius: 0;
             }
+        }
+        
+        /* 问题诊断区域 */
+        .diagnostic-section {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .diagnostic-section h3 {
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+        .diagnostic-section ul {
+            padding-left: 20px;
+        }
+        .diagnostic-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .solution-highlight {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -449,226 +458,188 @@
             </div>
         </div>
         
-        <!-- 方形布局容器 -->
-        <div class="square-container">
-            <div class="column">
-                <div class="card">
-                    <div class="card-header">风幕柜区域：盘菜</div>
-                    <div class="card-content">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>检查内容</th>
-                                        <th width="40px">完成</th>
-                                        <th width="30%">备注</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>盘菜区域：所有盘菜准备充足，种类充足；保鲜膜完整，叠放整齐</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>荤菜区7种：嫩牛肉≥4，无骨鸭掌≥4，双椒牛肉≥4，卤猪蹄≥4，虾滑≥4，毛肚≥2；千层肚≥4</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>素菜区6种：海带苗≥4，粉丝≥4，长寿菜≥4，响铃卷≥4，鸭血≥4，炸蛋≥4</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>蔬菜区3种：茼蒿≥2，空心菜≥2，生菜≥2，所有蔬菜无焉萎，适量喷洒水珠</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>主食区3种：手工面条≥12，方便面≥12，川粉≥12</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>所有盘菜都放置到相对应的标签位置，排放整齐，美观</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">风幕柜区域：串菜</div>
-                    <div class="card-content">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>检查内容</th>
-                                        <th width="40px">完成</th>
-                                        <th width="30%">备注</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>串菜区域所有种类准备充足，每盘荤菜≥60根，素菜≥50根</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>串菜上架原则：新来的放下面，旧的放上面</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>上架前检查旧品的状态以及日期标识</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写销毁记录..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>所有串菜盘里必须有垫有荷叶，且都是干净的</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>牛蛙、黄辣丁已添加冰块冰镇且盘子底部无积水</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="column">
-                <div class="card">
-                    <div class="card-header">小料台区域</div>
-                    <div class="card-content">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>检查内容</th>
-                                        <th width="40px">完成</th>
-                                        <th width="30%">备注</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>所有小料均已摆出，无遗漏，白糖、盐、芝麻已添加</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>小料台所有器皿干净、摆放整齐，在同一水平线上</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>香菜、香葱新鲜、无焉萎、无干瘪</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>芝麻酱符合出品标准，粘稠、丝滑、细腻、香味浓郁</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>蒜泥符合出品标准，无发绿、异味；小米辣新鲜、无异味</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">小吃及米饭</div>
-                    <div class="card-content">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>检查内容</th>
-                                        <th width="40px">完成</th>
-                                        <th width="30%">备注</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>凉拌菜当日制作当日清（午市/晚市分批次制作）</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写制作批次..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>米饭保持充足、新鲜</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>银耳汤备量充足，口味清甜适口，汤体晶莹粘稠</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>出品的小吃必须保证是香脆可口的，先开封先出</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">总体检查</div>
-                    <div class="card-content">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>检查内容</th>
-                                        <th width="40px">完成</th>
-                                        <th width="30%">备注</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>取餐区域必须是干净、卫生、且摆放整齐的</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>取餐区域所有客用物品应有相应标识标签</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>所有菜品应有相应菜牌</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td>每日11:00已清空冰箱旧品</td>
-                                        <td class="checkbox-cell"><input type="checkbox"></td>
-                                        <td class="note-cell"><textarea placeholder="填写处理情况..."></textarea></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+ 
+        
+        <div class="table-container">
+            <table id="checklist-table">
+                <thead>
+                    <tr>
+                        <th>检查内容</th>
+                        <th width="50px">完成</th>
+                        <th width="25%">备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header">
+                        <td><strong>区域：风幕柜区域：盘菜</strong>盘菜区域：所有盘菜准备充足，种类充足；保鲜膜完整，叠放整齐，排列在同一水平线上，摆放高度≤3层</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>荤菜区7种：嫩牛肉≥4，无骨鸭掌≥4，双椒牛肉≥4，卤猪蹄≥4，虾滑≥4，毛肚≥2；千层肚≥4</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>素菜区6种：海带苗≥4，粉丝≥4，长寿菜≥4，响铃卷≥4，鸭血≥4，炸蛋≥4</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>蔬菜区3种：茼蒿≥2，空心菜≥2，生菜≥2，所有蔬菜无焉萎，适量喷洒水珠</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>主食区3种：手工面条≥12，方便面≥12，川粉≥12</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>所有盘菜都放置到相对应的标签位置，排放整齐，美观</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>盘菜开膜抽查：看：色泽正常无霉斑；闻：无异味酸味；触：弹性正常无黏液</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写抽查情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>具体准备量可由店长根据营业情况进行调整</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写调整情况..."></textarea></td>
+                    </tr>
+                    
+                    <tr class="category-header">
+                        <td><strong>区域：风幕柜区域：串菜</strong>串菜区域所有种类准备充足，每盘荤菜≥60根，素菜≥50根，西兰花、花菜、玉米≥20根，蔬菜≥20根，油面筋≥10根，小皮蛋≥20根</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>串菜上架原则：新来的放下面，旧的放上面</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>上架前检查旧品的状态（看：色泽正常无霉斑；闻：无异味酸味；触：弹性正常无黏液）以及日期标识，≥24小时的菜品不上架并上报销毁（冻品除外）记录到菜品销毁记录本上</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写销毁记录..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>所有串菜盘里必须有垫有荷叶，且都是干净的</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>牛蛙、黄辣丁已添加冰块冰镇且盘子底部无积水</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>水盒里的水是清澈、干净、无异味的，无从竹签上掉落的菜品</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>高峰期（午11:30-14:00；晚17:30-21:00）保证每个串菜品类都有菜品，少量时立即补充或更换同类替代品</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写补充情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>包菜牛肉、绿叶蔬菜不能贴壁，绿叶蔬菜无焉萎菜品，可适量喷洒水珠</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    
+                    <tr class="category-header">
+                        <td><strong>区域：小料台区域</strong>所有小料均已摆出，无遗漏，白糖、盐、芝麻已添加，酱油、醋、麻油已添加</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>小料台所有器皿干净、摆放整齐，在同一水平线上，器皿统一、美观<br>所有小料应配有相应取料餐具，不得混用</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>香菜、香葱新鲜、无焉萎、无干瘪</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>芝麻酱符合出品标准，粘稠、丝滑、细腻、香味浓郁</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>蒜泥符合出品标准，无发绿、异味；小米辣新鲜、无异味；折耳根无发黑</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    
+                    <tr class="category-header">
+                        <td><strong>区域：小吃及米饭</strong>凉拌菜当日制作当日清（午市/晚市分批次制作）</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写制作批次..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>米饭保持充足、新鲜</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>银耳汤备量充足，口味清甜适口，汤体晶莹粘稠，色泽正常</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>出品的小吃必须保证是香脆可口的，先开封先出，储存起来的必须时密封好的</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    
+                    <tr class="category-header">
+                        <td><strong>区域：总体&准备</strong>取餐区域必须是干净、卫生、且摆放整齐的，每餐开档时应做调料瓶瓶口清洁</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>取餐区域所有客用物品应有相应标识标签</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>所有菜品应有相应菜牌</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>每日11:00已清空冰箱旧品（优先上架昨日冰箱菜品）</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写处理情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>厨房冰箱内有备用的串好的串菜和盘菜（由店内厨师与店长进行判断）</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备用情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>冰箱内所有已串好的菜品都贴有生产日期标签</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>取餐区域地面、台面、柜面、墙面清洁干净；所有灯光、设备正常运作</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="export-progress"></div>
         </div>
         
         <div class="status-message" id="status-message"></div>
@@ -686,7 +657,7 @@
         </div>
         
         <footer>
-            <p>© 2023 渝欢婆门店管理 | 检查表版本 2.0 | 优化截图功能</p>
+            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.3 | 截图问题已修复</p>
         </footer>
     </div>
     
@@ -781,7 +752,7 @@
             });
         }
         
-        // 核心截图函数
+        // 核心截图函数 - 修改为使用固定宽度的克隆容器
         function takeScreenshot(callback) {
             const captureArea = document.getElementById('capture-area');
             const progress = document.getElementById('screenshot-progress');
@@ -800,24 +771,30 @@
             // 替换输入框为静态文本
             replaceInputsWithStaticText();
             
-            // 添加方形模式类
-            captureArea.classList.add('screenshot-mode');
+            // 创建克隆容器用于截图（固定宽度）
+            const clonedContainer = captureArea.cloneNode(true);
+            clonedContainer.style.width = '800px'; // 固定宽度
+            clonedContainer.style.position = 'absolute';
+            clonedContainer.style.left = '-10000px'; // 移出屏幕
+            clonedContainer.style.top = '0';
+            clonedContainer.style.margin = '0 auto';
+            document.body.appendChild(clonedContainer);
             
             // 显示进度提示
             progress.style.display = 'flex';
             
             // 使用html2canvas生成截图
-            html2canvas(captureArea, {
-                scale: 2,
+            html2canvas(clonedContainer, {
+                scale: 2, // 提高截图质量
                 backgroundColor: '#ffffff',
                 logging: false,
                 useCORS: true
             }).then(canvas => {
+                // 移除克隆容器
+                document.body.removeChild(clonedContainer);
+                
                 // 恢复输入框元素
                 restoreInputElements();
-                
-                // 移除方形模式类
-                captureArea.classList.remove('screenshot-mode');
                 
                 // 隐藏进度提示
                 progress.style.display = 'none';
@@ -828,11 +805,13 @@
                 // 执行回调函数
                 if (callback) callback(imgData);
             }).catch(err => {
+                // 确保移除克隆容器
+                if (clonedContainer.parentNode) {
+                    document.body.removeChild(clonedContainer);
+                }
+                
                 // 恢复输入框元素
                 restoreInputElements();
-                
-                // 移除方形模式类
-                captureArea.classList.remove('screenshot-mode');
                 
                 progress.style.display = 'none';
                 console.error('截图生成失败:', err);
