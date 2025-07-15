@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>渝欢婆菜品上架检查表</title>
+    <!-- 引入SheetJS库实现Excel导出 -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -16,36 +19,44 @@
             color: #333;
             line-height: 1.6;
             padding: 10px;
+            background: linear-gradient(135deg, #f9f9f9, #eef2f7);
         }
         .container {
             max-width: 100%;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         header {
             background: linear-gradient(135deg, #d32f2f, #b71c1c);
             color: white;
-            padding: 15px;
+            padding: 20px 15px;
             text-align: center;
+            position: relative;
         }
         h1 {
-            font-size: 22px;
+            font-size: 24px;
             margin-bottom: 8px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
         }
         .info-bar {
             background-color: #f5f5f5;
-            padding: 10px 15px;
+            padding: 15px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
             border-bottom: 1px solid #eee;
         }
         .info-item {
             flex: 1;
-            min-width: 120px;
+            min-width: 150px;
         }
         .info-item label {
             display: block;
@@ -56,24 +67,32 @@
         }
         .info-item input, .info-item select {
             width: 100%;
-            padding: 8px 10px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+        .info-item input:focus, .info-item select:focus {
+            border-color: #d32f2f;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
         }
         .table-container {
             overflow-x: auto;
-            padding: 0 10px 10px;
+            padding: 10px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 10px 0;
             font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
+            border: 1px solid #e0e0e0;
+            padding: 12px;
             text-align: left;
             vertical-align: top;
         }
@@ -90,11 +109,12 @@
         }
         .checkbox-cell {
             text-align: center;
-            width: 40px;
+            width: 50px;
         }
         input[type="checkbox"] {
             transform: scale(1.3);
             cursor: pointer;
+            accent-color: #388e3c;
         }
         .note-cell {
             width: 30%;
@@ -102,41 +122,65 @@
         }
         textarea {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             resize: vertical;
             min-height: 80px;
             font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: #388e3c;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(56, 142, 60, 0.2);
         }
         .actions {
             display: flex;
             justify-content: center;
-            padding: 15px;
-            gap: 15px;
+            padding: 20px;
+            gap: 20px;
             background-color: #f5f5f5;
             border-top: 1px solid #eee;
+            flex-wrap: wrap;
         }
         .btn {
-            padding: 10px 20px;
-            font-size: 14px;
+            padding: 12px 25px;
+            font-size: 16px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .btn:active {
+            transform: translateY(0);
         }
         .btn-download {
             background: linear-gradient(135deg, #388e3c, #2e7d32);
             color: white;
-            font-weight: bold;
+        }
+        .btn-download:hover {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
         }
         .btn-reset {
-            background: #f5f5f5;
+            background: white;
             border: 1px solid #ddd;
             color: #555;
+        }
+        .btn-reset:hover {
+            background-color: #f8f8f8;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         footer {
             text-align: center;
@@ -146,25 +190,73 @@
             background-color: #f9f9f9;
             border-top: 1px solid #eee;
         }
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #388e3c;
+            font-weight: 500;
+            min-height: 40px;
+        }
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            width: 100%;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 10px 0;
+            display: none;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #388e3c);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
 
         /* 手机端特别优化 */
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             .info-item {
                 min-width: 100%;
             }
             th, td {
-                padding: 8px;
+                padding: 10px;
                 font-size: 13px;
             }
             .note-cell {
                 min-width: 120px;
             }
             textarea {
-                min-height: 60px;
+                min-height: 70px;
                 font-size: 13px;
             }
             .category-header td:first-child {
                 font-size: 14px;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                min-width: 140px;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+        }
+        
+        /* 打印优化 */
+        @media print {
+            .actions, footer {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
             }
         }
     </style>
@@ -207,7 +299,7 @@
                     <tr>
                         <th width="25%">检查区域</th>
                         <th>检查内容</th>
-                        <th width="40px">完成</th>
+                        <th width="50px">完成</th>
                         <th width="30%">备注</th>
                     </tr>
                 </thead>
@@ -390,9 +482,15 @@
             </table>
         </div>
         
+        <div class="progress-bar">
+            <div class="progress" id="export-progress"></div>
+        </div>
+        
+        <div class="status-message" id="status-message"></div>
+        
         <div class="actions">
             <button class="btn btn-download" onclick="downloadExcel()">
-                <i class="fas fa-download"></i> 下载检查表
+                <i class="fas fa-file-excel"></i> 导出Excel表格
             </button>
             <button class="btn btn-reset" onclick="resetForm()">
                 <i class="fas fa-redo"></i> 重置表格
@@ -400,7 +498,7 @@
         </div>
         
         <footer>
-            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.1</p>
+            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.1 | 导出功能已优化</p>
         </footer>
     </div>
 
@@ -408,6 +506,21 @@
         // 设置默认日期为今天
         document.getElementById('date').valueAsDate = new Date();
         
+        // 显示状态信息
+        function showStatus(message, isSuccess = true) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.style.color = isSuccess ? '#388e3c' : '#d32f2f';
+            
+            // 3秒后清除消息
+            if(isSuccess) {
+                setTimeout(() => {
+                    statusEl.textContent = '';
+                }, 3000);
+            }
+        }
+        
+        // 导出Excel函数
         function downloadExcel() {
             // 获取表单数据
             const date = document.getElementById('date').value;
@@ -415,10 +528,21 @@
             const inspector = document.getElementById('inspector').value;
             const store = document.getElementById('store').value;
             
+            // 验证必填项
             if (!date || !inspector || !store) {
-                alert("请填写日期、检查人和门店信息！");
+                showStatus("请填写日期、检查人和门店信息！", false);
                 return;
             }
+            
+            // 显示进度条
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.getElementById('export-progress');
+            const statusEl = document.getElementById('status-message');
+            
+            progressBar.style.display = 'block';
+            progress.style.width = '30%';
+            statusEl.textContent = '正在准备数据...';
+            statusEl.style.color = '#1976d2';
             
             // 创建工作簿
             const wb = XLSX.utils.book_new();
@@ -440,18 +564,35 @@
             // 添加表头
             ws_data.push(["检查区域", "检查内容", "完成情况", "备注"]);
             
+            // 更新进度
+            progress.style.width = '60%';
+            statusEl.textContent = '正在处理表格内容...';
+            
             // 添加表格内容
             const rows = table.querySelectorAll('tbody tr');
+            let currentArea = "";
+            
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
-                if (cells.length >= 3) {
-                    const area = cells[0].textContent;
+                if (cells.length === 4) {
+                    // 包含区域的行
+                    currentArea = cells[0].textContent;
                     const content = cells[1].textContent;
-                    const checked = cells[2].querySelector('input').checked ? "✓" : "";
+                    const checked = cells[2].querySelector('input').checked ? "✓" : "✗";
                     const note = cells[3].querySelector('textarea').value;
-                    ws_data.push([area, content, checked, note]);
+                    ws_data.push([currentArea, content, checked, note]);
+                } else if (cells.length === 3) {
+                    // 不包含区域的行
+                    const content = cells[0].textContent;
+                    const checked = cells[1].querySelector('input').checked ? "✓" : "✗";
+                    const note = cells[2].querySelector('textarea').value;
+                    ws_data.push([currentArea, content, checked, note]);
                 }
             });
+            
+            // 更新进度
+            progress.style.width = '80%';
+            statusEl.textContent = '正在生成Excel文件...';
             
             // 创建工作表
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
@@ -461,25 +602,38 @@
                 {wch: 25},
                 {wch: 70},
                 {wch: 12},
-                {wch: 30}
+                {wch: 40}
             ];
             
             // 添加到工作簿
             wb.Sheets["菜品上架检查表"] = ws;
             
-            // 生成Excel文件并下载
-            const wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
-            const s2ab = s => {
-                const buf = new ArrayBuffer(s.length);
-                const view = new Uint8Array(buf);
-                for (let i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-                return buf;
-            };
+            // 更新进度
+            progress.style.width = '95%';
+            statusEl.textContent = '准备下载文件...';
             
-            saveAs(new Blob([s2ab(wbout)], {type:"application/octet-stream"}), 
-                  `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.xlsx`);
+            // 生成Excel文件并下载
+            setTimeout(() => {
+                try {
+                    XLSX.writeFile(wb, `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.xlsx`);
+                    
+                    // 完成进度
+                    progress.style.width = '100%';
+                    showStatus(`导出成功！文件已保存为: 渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.xlsx`);
+                    
+                    // 隐藏进度条
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        progress.style.width = '0%';
+                    }, 2000);
+                } catch (error) {
+                    progressBar.style.display = 'none';
+                    showStatus("导出失败: " + error.message, false);
+                }
+            }, 500);
         }
         
+        // 重置表单
         function resetForm() {
             if (confirm("确定要重置表格吗？所有勾选内容和备注将被清除。")) {
                 // 重置复选框
@@ -497,19 +651,10 @@
                 // 重置表单字段
                 document.getElementById('date').valueAsDate = new Date();
                 document.getElementById('inspector').value = "";
+                
+                showStatus("表格已重置！");
             }
         }
-        
-        function saveAs(blob, filename) {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
     </script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>
