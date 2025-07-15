@@ -1,10 +1,9 @@
-这个网页在手机上看起来太长了， 可以把第一列检查区域直接归类在检查内容中（单独一行写区域：），备注区域的列宽也可以窄一点。 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>渝欢婆菜品上架检查表</title>
-    <!-- 引入SheetJS库实现Excel导出 -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -104,8 +103,12 @@
         }
         .category-header {
             background-color: #e8f5e9 !important;
-            font-weight: bold;
-            color: #2e7d32;
+        }
+        .category-header td strong {
+             display: block;
+             margin-bottom: 8px;
+             font-weight: bold;
+             color: #2e7d32;
         }
         .checkbox-cell {
             text-align: center;
@@ -117,8 +120,8 @@
             accent-color: #388e3c;
         }
         .note-cell {
-            width: 30%;
-            min-width: 150px;
+            width: 25%;
+            min-width: 120px;
         }
         textarea {
             width: 100%;
@@ -224,7 +227,7 @@
                 font-size: 13px;
             }
             .note-cell {
-                min-width: 120px;
+                min-width: 100px;
             }
             textarea {
                 min-height: 70px;
@@ -297,17 +300,14 @@
             <table id="checklist-table">
                 <thead>
                     <tr>
-                        <th width="25%">检查区域</th>
                         <th>检查内容</th>
                         <th width="50px">完成</th>
-                        <th width="30%">备注</th>
+                        <th width="25%">备注</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- 风幕柜区域：盘菜 -->
                     <tr class="category-header">
-                        <td rowspan="8">风幕柜区域：盘菜</td>
-                        <td>盘菜区域：所有盘菜准备充足，种类充足；保鲜膜完整，叠放整齐，排列在同一水平线上，摆放高度≤3层</td>
+                        <td><strong>区域：风幕柜区域：盘菜</strong>盘菜区域：所有盘菜准备充足，种类充足；保鲜膜完整，叠放整齐，排列在同一水平线上，摆放高度≤3层</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
@@ -347,10 +347,8 @@
                         <td class="note-cell"><textarea placeholder="填写调整情况..."></textarea></td>
                     </tr>
                     
-                    <!-- 风幕柜区域：串菜 -->
                     <tr class="category-header">
-                        <td rowspan="8">风幕柜区域：串菜</td>
-                        <td>串菜区域所有种类准备充足，每盘荤菜≥60根，素菜≥50根，西兰花、花菜、玉米≥20根，蔬菜≥20根，油面筋≥10根，小皮蛋≥20根</td>
+                        <td><strong>区域：风幕柜区域：串菜</strong>串菜区域所有种类准备充足，每盘荤菜≥60根，素菜≥50根，西兰花、花菜、玉米≥20根，蔬菜≥20根，油面筋≥10根，小皮蛋≥20根</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
@@ -390,10 +388,8 @@
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
                     
-                    <!-- 小料台区域 -->
                     <tr class="category-header">
-                        <td rowspan="5">小料台区域</td>
-                        <td>所有小料均已摆出，无遗漏，白糖、盐、芝麻已添加，酱油、醋、麻油已添加</td>
+                        <td><strong>区域：小料台区域</strong>所有小料均已摆出，无遗漏，白糖、盐、芝麻已添加，酱油、醋、麻油已添加</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
@@ -418,10 +414,8 @@
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
                     
-                    <!-- 小吃及米饭 -->
                     <tr class="category-header">
-                        <td rowspan="4">小吃及米饭</td>
-                        <td>凉拌菜当日制作当日清（午市/晚市分批次制作）</td>
+                        <td><strong>区域：小吃及米饭</strong>凉拌菜当日制作当日清（午市/晚市分批次制作）</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
                         <td class="note-cell"><textarea placeholder="填写制作批次..."></textarea></td>
                     </tr>
@@ -441,10 +435,8 @@
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
                     
-                    <!-- 总体&准备 -->
                     <tr class="category-header">
-                        <td rowspan="7">总体&准备</td>
-                        <td>取餐区域必须是干净、卫生、且摆放整齐的，每餐开档时应做调料瓶瓶口清洁</td>
+                        <td><strong>区域：总体&准备</strong>取餐区域必须是干净、卫生、且摆放整齐的，每餐开档时应做调料瓶瓶口清洁</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
                         <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
                     </tr>
@@ -498,7 +490,7 @@
         </div>
         
         <footer>
-            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.1 | 导出功能已优化</p>
+            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.2 | 移动端优化版</p>
         </footer>
     </div>
 
@@ -573,21 +565,27 @@
             let currentArea = "";
             
             rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length === 4) {
-                    // 包含区域的行
-                    currentArea = cells[0].textContent;
-                    const content = cells[1].textContent;
-                    const checked = cells[2].querySelector('input').checked ? "✓" : "✗";
-                    const note = cells[3].querySelector('textarea').value;
-                    ws_data.push([currentArea, content, checked, note]);
-                } else if (cells.length === 3) {
-                    // 不包含区域的行
-                    const content = cells[0].textContent;
-                    const checked = cells[1].querySelector('input').checked ? "✓" : "✗";
-                    const note = cells[2].querySelector('textarea').value;
-                    ws_data.push([currentArea, content, checked, note]);
+                // 如果是新分类的标题行，提取区域名称
+                if (row.classList.contains('category-header')) {
+                    const contentCell = row.cells[0];
+                    // 从 <strong> 标签中提取区域名称
+                    const strongTag = contentCell.querySelector('strong');
+                    if (strongTag) {
+                        currentArea = strongTag.textContent.replace('区域：', '').trim();
+                    }
                 }
+                
+                const cells = row.cells;
+                // 获取检查内容，并移除区域标题（如果存在）
+                let content = cells[0].textContent.trim();
+                if (row.classList.contains('category-header')) {
+                    content = content.replace(`区域：${currentArea}`, '').trim();
+                }
+
+                const checked = cells[1].querySelector('input').checked ? "✓" : "✗";
+                const note = cells[2].querySelector('textarea').value;
+                
+                ws_data.push([currentArea, content, checked, note]);
             });
             
             // 更新进度
@@ -651,6 +649,7 @@
                 // 重置表单字段
                 document.getElementById('date').valueAsDate = new Date();
                 document.getElementById('inspector').value = "";
+                document.getElementById('store').value = "";
                 
                 showStatus("表格已重置！");
             }
