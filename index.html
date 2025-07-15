@@ -24,7 +24,6 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            position: relative;
         }
         header {
             background: linear-gradient(135deg, #d32f2f, #b71c1c);
@@ -139,11 +138,6 @@
             border: 1px solid #ddd;
             color: #555;
         }
-        .btn-preview {
-            background: linear-gradient(135deg, #1976d2, #0d47a1);
-            color: white;
-            font-weight: bold;
-        }
         footer {
             text-align: center;
             padding: 15px;
@@ -153,90 +147,6 @@
             border-top: 1px solid #eee;
         }
 
-        /* 预览模态框样式 */
-        .preview-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            padding: 20px;
-            overflow: auto;
-        }
-        .preview-content {
-            background: white;
-            max-width: 800px;
-            margin: 20px auto;
-            border-radius: 8px;
-            padding: 20px;
-            position: relative;
-        }
-        .preview-image {
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #f44336;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .preview-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        /* 截图进度提示 */
-        .screenshot-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            display: none;
-        }
-        .progress-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 300px;
-        }
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #388e3c;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
         /* 手机端特别优化 */
         @media (max-width: 480px) {
             .info-item {
@@ -256,17 +166,11 @@
             .category-header td:first-child {
                 font-size: 14px;
             }
-            .actions {
-                flex-wrap: wrap;
-            }
-            .btn {
-                flex: 1 0 100%;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="capture-area">
+    <div class="container">
         <header>
             <h1>渝欢婆菜品上架检查表</h1>
             <div class="subtitle">严格执行检查制度，确保菜品品质与安全</div>
@@ -487,11 +391,8 @@
         </div>
         
         <div class="actions">
-            <button class="btn btn-download" onclick="downloadScreenshot()">
-                <i class="fas fa-camera"></i> 保存截图
-            </button>
-            <button class="btn btn-preview" onclick="previewScreenshot()">
-                <i class="fas fa-eye"></i> 预览截图
+            <button class="btn btn-download" onclick="downloadExcel()">
+                <i class="fas fa-download"></i> 下载检查表
             </button>
             <button class="btn btn-reset" onclick="resetForm()">
                 <i class="fas fa-redo"></i> 重置表格
@@ -502,70 +403,12 @@
             <p>© 2023 渝欢婆门店管理 | 检查表版本 1.1</p>
         </footer>
     </div>
-    
-    <!-- 预览模态框 -->
-    <div id="preview-modal" class="preview-modal">
-        <div class="preview-content">
-            <button class="close-btn" onclick="closePreview()">&times;</button>
-            <h2>检查表预览</h2>
-            <img id="preview-image" class="preview-image" alt="检查表预览">
-            <div class="preview-actions">
-                <button class="btn btn-download" onclick="downloadFromPreview()">
-                    <i class="fas fa-download"></i> 下载图片
-                </button>
-                <button class="btn btn-reset" onclick="closePreview()">
-                    <i class="fas fa-times"></i> 关闭预览
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 截图进度提示 -->
-    <div id="screenshot-progress" class="screenshot-progress">
-        <div class="progress-content">
-            <div class="spinner"></div>
-            <h3>正在生成截图...</h3>
-            <p>请稍候，这可能需要几秒钟时间</p>
-        </div>
-    </div>
 
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         // 设置默认日期为今天
         document.getElementById('date').valueAsDate = new Date();
         
-        // 截图函数
-        function captureScreenshot(callback) {
-            const captureArea = document.getElementById('capture-area');
-            const progress = document.getElementById('screenshot-progress');
-            
-            // 显示进度提示
-            progress.style.display = 'flex';
-            
-            // 使用html2canvas生成截图
-            html2canvas(captureArea, {
-                scale: 2, // 提高截图质量
-                backgroundColor: '#ffffff',
-                logging: false,
-                useCORS: true
-            }).then(canvas => {
-                // 隐藏进度提示
-                progress.style.display = 'none';
-                
-                // 将canvas转换为图片URL
-                const imgData = canvas.toDataURL('image/png');
-                
-                // 执行回调函数
-                if (callback) callback(imgData);
-            }).catch(err => {
-                progress.style.display = 'none';
-                console.error('截图生成失败:', err);
-                alert('截图生成失败，请重试或检查控制台获取详细信息');
-            });
-        }
-        
-        // 下载截图
-        function downloadScreenshot() {
+        function downloadExcel() {
             // 获取表单数据
             const date = document.getElementById('date').value;
             const checkTime = document.getElementById('check-time').value;
@@ -577,62 +420,66 @@
                 return;
             }
             
-            // 生成并下载截图
-            captureScreenshot(imgData => {
-                const link = document.createElement('a');
-                link.download = `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.png`;
-                link.href = imgData;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                alert('截图已保存！');
+            // 创建工作簿
+            const wb = XLSX.utils.book_new();
+            wb.SheetNames.push("菜品上架检查表");
+            
+            // 准备数据
+            const table = document.getElementById('checklist-table');
+            const ws_data = [];
+            
+            // 添加标题行
+            ws_data.push(["渝欢婆菜品上架检查表", "", "", ""]);
+            ws_data.push([]);
+            
+            // 添加检查信息
+            ws_data.push(["日期:", date, "检查时间:", checkTime]);
+            ws_data.push(["检查人:", inspector, "门店:", store]);
+            ws_data.push([]);
+            
+            // 添加表头
+            ws_data.push(["检查区域", "检查内容", "完成情况", "备注"]);
+            
+            // 添加表格内容
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const area = cells[0].textContent;
+                    const content = cells[1].textContent;
+                    const checked = cells[2].querySelector('input').checked ? "✓" : "";
+                    const note = cells[3].querySelector('textarea').value;
+                    ws_data.push([area, content, checked, note]);
+                }
             });
-        }
-        
-        // 预览截图
-        function previewScreenshot() {
-            // 获取表单数据
-            const date = document.getElementById('date').value;
-            const inspector = document.getElementById('inspector').value;
-            const store = document.getElementById('store').value;
             
-            if (!date || !inspector || !store) {
-                alert("请填写日期、检查人和门店信息！");
-                return;
-            }
+            // 创建工作表
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
             
-            // 生成并预览截图
-            captureScreenshot(imgData => {
-                const previewImage = document.getElementById('preview-image');
-                const previewModal = document.getElementById('preview-modal');
-                
-                previewImage.src = imgData;
-                previewModal.style.display = 'block';
-            });
-        }
-        
-        // 从预览下载截图
-        function downloadFromPreview() {
-            const imgData = document.getElementById('preview-image').src;
-            const date = document.getElementById('date').value;
-            const checkTime = document.getElementById('check-time').value;
-            const store = document.getElementById('store').value;
+            // 设置列宽
+            ws['!cols'] = [
+                {wch: 25},
+                {wch: 70},
+                {wch: 12},
+                {wch: 30}
+            ];
             
-            const link = document.createElement('a');
-            link.download = `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.png`;
-            link.href = imgData;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // 添加到工作簿
+            wb.Sheets["菜品上架检查表"] = ws;
+            
+            // 生成Excel文件并下载
+            const wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+            const s2ab = s => {
+                const buf = new ArrayBuffer(s.length);
+                const view = new Uint8Array(buf);
+                for (let i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            };
+            
+            saveAs(new Blob([s2ab(wbout)], {type:"application/octet-stream"}), 
+                  `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.xlsx`);
         }
         
-        // 关闭预览
-        function closePreview() {
-            document.getElementById('preview-modal').style.display = 'none';
-        }
-        
-        // 重置表单
         function resetForm() {
             if (confirm("确定要重置表格吗？所有勾选内容和备注将被清除。")) {
                 // 重置复选框
@@ -651,6 +498,15 @@
                 document.getElementById('date').valueAsDate = new Date();
                 document.getElementById('inspector').value = "";
             }
+        }
+        
+        function saveAs(blob, filename) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
     
