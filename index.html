@@ -1,620 +1,659 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>渝欢婆菜品上架检查表</title>
     <style>
-:root {
-    --primary-color: #007aff;
-    --border-color: #d2d2d7;
-    --border-radius: 980px; /* Use 50% for rounded corners */
-    --line-height: 1.4705882353;
-    --letter-spacing: -0.022em;
-    --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "SF Pro SC", "Helvetica Neue", "Helvetica", "PingFang SC", "Arial", sans-serif;
-    --padding: 10px; /* Define padding */
-    --font-size: 16px; /* Define font size */
-}
-
-body {
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    letter-spacing: var(--letter-spacing);
-    color: rgb(29, 29, 31);
-    background-color: rgb(245, 245, 247);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh; /* Use min-height to allow content to expand */
-    /* overflow: hidden; Remove this unless absolutely necessary*/
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-weight: 400;
-    transition: all 0.3s ease-out;
-}
-
-input[type="text"],
-textarea,
-button,
-select {
-    padding: var(--padding);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    box-sizing: border-box;
-}
-
-button {
-    background-color: var(--primary-color);
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #005eff;
-}
-
-button:active {
-    background-color: #004de0;
-}
-
-button:disabled {
-    background-color: #c7c7cc;
-    cursor: not-allowed;
-}
-
-textarea {
-    resize: vertical;
-    min-height: 40px;
-    overflow: hidden;
-}
-
-textarea:focus {
-    outline: none;
-    border-color: #0065FA;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
-}
-
-@supports (-webkit-hyphens: none) and (not (-ms-accelerator: true)) and (not (windows: true)) {
-    body {
-        font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-    }
-}
-
-        @media (max-width: 480px) {
-    body {
-        font-size: 16px;
-        padding: 10px;
-    }
-}
-
-/* Styles for larger screens (tablets and desktops) */
-@media (min-width: 768px) {
-    body {
-        font-size: 19px;
-        padding: 5px;
-    }
-}
-
-
-        h1, h2, h3 {
-            margin: 0 0 1em;
-            font-weight: 600;
-            color: #000000;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
-
-        p {
-            margin-bottom: 1em;
-            color: #333333;
-        }
-
-        a {
-            color: #007aff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: #0056d3;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-  
-
-        /* Chat container styles */
-        #chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%; /* Important: Use 100% to fill body */
-            max-width: 780px;
-            margin: 0 auto;
-        }
-
-        #messages {
-            flex: 1;
-            padding: 20px 15px;
-            overflow-y: auto;
-            max-width: 95%;
-	bottom: 20px;
-            //margin: 0 auto;
-            //box-sizing: border-box;
-        }
-
-        .message {
-            //border-radius: var(--border-radius);
-            padding: 10px 14px;
-            margin-bottom: 20px;
-            word-wrap: break-word;
-            max-width: 98%;
-	transition: background-color 0.3s ease-out; /* Example transition */
-        }
-
-        .message.user {
-            color: #004085;
-            text-align: right;
-            align-self: flex-end;
-        }
-
-        .message.bot {
-            color: #1c1c1e;
-            text-align: left;
-            align-self: flex-start;
-        }
-
-        /* Locked input container styles */
-        #input-container {
-    display: flex;
-    background-color: #F5F5F7;
-    padding: 10px; /* Reduced padding for mobile */
-    position: fixed; /* Use fixed for better mobile handling */
-    bottom: 0px; /* Added bottom spacing */
-    left: 0; /* Ensure it spans the full width */
-    right: 0;
-    box-sizing: border-box;
-    align-items: flex-end; /* Center vertically */
-    z-index: 100; /* Ensure it's above other content */
-    padding-bottom: env(safe-area-inset-bottom); /* Account for safe area */
-   max-width: 780px; /* Added max-width */
-    margin: 0 auto; /* Center the container */
-}
-
-#input-wrapper {
-     flex-grow: 1;
-    position: relative;
-    display: flex; /* Important for aligning textarea and button */
-    flex-direction: column; /* Stack textarea and optional placeholder */
-
-
-}
-
-#user-input {
-    width: 100%;
-    padding: 10px 12px; /* Reduced padding */
-    border: 1px solid #d2d2d7;
-    border-radius: 10px;
-    font-size: 15px; /* Increased font size for mobile */
-    font-family: var(--font-family);
-    box-sizing: border-box;
-    resize: vertical;
-    min-height: 44px; /* Minimum height for touch */
-    max-height: 150px; /* Reduced max height */
-    overflow-y: auto;
-    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); /* Smooth transition with easing */
-}
-
-#user-input:focus {
-  outline: none;
-  border-radius: 20px; /* Maintains border radius on focus */
-  border: 1px solid #d2d2d7;
-  box-shadow: 0 0 15px rgba(220, 223, 245, 0.5); /* Updated box-shadow for better visibility */
-}
-
-#user-input.scrolled {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-
-#user-input::-webkit-scrollbar {
-    width: 5px; /* Adjust the width as needed */
-}
-
-#user-input::-webkit-scrollbar-thumb {
-    background-color: #888; /* Color of the scrollbar thumb */
-    border-radius: 6px; /* Rounded corners for the thumb */
-}
-
-#user-input::-webkit-scrollbar-track {
-    background-color: #f1f1f1; /* Color of the scrollbar track */
-}
-
-.send-button {
-     position: absolute;
-    bottom: 9px; /* Position at the bottom */
-    right: 100px;
-    width: 36px;
-    height: 36px;
-    border: none;
-    border-radius: 50%;
-    background-color: #007aff;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	transition: background-color 0.3s ease-out, transform 0.1s ease-out; /* Example transitions */
-}
-	
-	.send-button:hover {
-	    background-color: #005eff;
-	}
-	
-	.send-button:active {
-	    background-color: #004de0;
-	}
-	
-	.send-button:disabled {
-	    background-color: #c7c7cc;
-	    cursor: not-allowed;
-	}
-	
-	.message, .send-button, #user-input {
-	    border-radius: var(--border-radius);
-	}
-       
-
-	/* Styles omitted for brevity */
-        #settings-container {
-            display: none; /* Initially hidden */
-            border: 1px solid #ccc;
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
             padding: 10px;
-            margin-top: 10px;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        header {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        .info-bar {
+            background-color: #f5f5f5;
+            padding: 10px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .info-item {
+            flex: 1;
+            min-width: 120px;
+        }
+        .info-item label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+        .info-item input, .info-item select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .table-container {
+            overflow-x: auto;
+            padding: 0 10px 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        .category-header {
+            background-color: #e8f5e9 !important;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .checkbox-cell {
+            text-align: center;
+            width: 40px;
+        }
+        input[type="checkbox"] {
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        .note-cell {
+            width: 30%;
+            min-width: 150px;
+        }
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 80px;
+            font-size: 14px;
+        }
+        .actions {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            gap: 15px;
+            background-color: #f5f5f5;
+            border-top: 1px solid #eee;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-download {
+            background: linear-gradient(135deg, #388e3c, #2e7d32);
+            color: white;
+            font-weight: bold;
+        }
+        .btn-reset {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            color: #555;
+        }
+        .btn-preview {
+            background: linear-gradient(135deg, #1976d2, #0d47a1);
+            color: white;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #666;
+            font-size: 12px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
         }
 
-	#show-settings {
-  padding: 5px 10px; /* Adjust padding for icon button */
-  background-color: #ffffff; /* Consistent background color */
-  border: none; /* No border for icon button */
-  cursor: pointer;
-  color: #333; /* Icon color */
-  font-size: 18px; /* Larger font for icon */
-}
-
-#show-settings:hover {
-  background-color: #005eff; /* Lighten background on hover */
-}
-
-.message, .send-button, #user-input, #model-select-button, #show-settings {
-  border-radius: var(--border-radius); /* Consistent border radius */
-}
-
-#model-selector {
-  display: flex; /* Allow button and select side-by-side */
-  margin-left: 10px;
- align-items: center; /* Important for alignment */
-}
-
-#model-select-button {
-  padding: 8px 5px; /* Adjust padding for button */
-  font-size: 14px; /* Smaller font for button text */
-  border: none; /* 1px solid #d0d0d0; */
-  //background-color: #ffffff;
-  background: transparent; /* Transparent background */
-  cursor: pointer;
-  color: #333; /* Adjust button text color */
-}
-
-
- /* Model dropdown styles */
-       #model-select {
-    padding: 8px 25px 8px 10px; /* Adjust padding for arrow */
-    font-size: 16px;
-    border: 1px solid #d0d0d0;
-    background-color: #ffffff;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    flex-shrink: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>"); /* Add arrow icon */
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 1em;
-    width: 40px; /* Set a fixed width */
-    text-indent: -9999px; /* Hide the text by indenting it off-screen */
-    overflow: hidden; /* Hide any overflowing text */
-}
-
+        /* 预览模态框样式 */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            padding: 20px;
+            overflow: auto;
+        }
+        .preview-content {
+            background: white;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+        .preview-image {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        /* 截图进度提示 */
+        .screenshot-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+        .progress-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 300px;
+        }
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #388e3c;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 手机端特别优化 */
+        @media (max-width: 480px) {
+            .info-item {
+                min-width: 100%;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 13px;
+            }
+            .note-cell {
+                min-width: 120px;
+            }
+            textarea {
+                min-height: 60px;
+                font-size: 13px;
+            }
+            .category-header td:first-child {
+                font-size: 14px;
+            }
+            .actions {
+                flex-wrap: wrap;
+            }
+            .btn {
+                flex: 1 0 100%;
+            }
+        }
     </style>
 </head>
-
 <body>
-
-  <div id="chat-container">
-    <div id="messages"></div>
-    <div id="input-container">
+    <div class="container" id="capture-area">
+        <header>
+            <h1>渝欢婆菜品上架检查表</h1>
+            <div class="subtitle">严格执行检查制度，确保菜品品质与安全</div>
+        </header>
+        
+        <div class="info-bar">
+            <div class="info-item">
+                <label for="date">日期：</label>
+                <input type="date" id="date" required>
+            </div>
+            <div class="info-item">
+                <label for="check-time">检查时间：</label>
+                <select id="check-time">
+                    <option value="11:25">11:25</option>
+                    <option value="14:00">14:00</option>
+                    <option value="17:25">17:25</option>
+                    <option value="20:00">20:00</option>
+                    <option value="22:00">22:00</option>
+                </select>
+            </div>
+            <div class="info-item">
+                <label for="inspector">检查人：</label>
+                <input type="text" id="inspector" placeholder="请输入姓名" required>
+            </div>
+            <div class="info-item">
+                <label for="store">门店：</label>
+                <input type="text" id="store" placeholder="门店名称" required>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="checklist-table">
+                <thead>
+                    <tr>
+                        <th width="25%">检查区域</th>
+                        <th>检查内容</th>
+                        <th width="40px">完成</th>
+                        <th width="30%">备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 风幕柜区域：盘菜 -->
+                    <tr class="category-header">
+                        <td rowspan="8">风幕柜区域：盘菜</td>
+                        <td>盘菜区域：所有盘菜准备充足，种类充足；保鲜膜完整，叠放整齐，排列在同一水平线上，摆放高度≤3层</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>荤菜区7种：嫩牛肉≥4，无骨鸭掌≥4，双椒牛肉≥4，卤猪蹄≥4，虾滑≥4，毛肚≥2；千层肚≥4</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>素菜区6种：海带苗≥6，粉丝≥6，长寿菜≥6，响铃卷≥6，鸭血≥6，炸蛋≥6</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>蔬菜区3种：茼蒿≥2，空心菜≥2，生菜≥2，所有蔬菜无焉萎，适量喷洒水珠</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>主食区3种：手工面条≥12，方便面≥12，川粉≥12</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>所有盘菜都放置到相对应的标签位置，排放整齐，美观</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>盘菜开膜抽查：看：色泽正常无霉斑；闻：无异味酸味；触：弹性正常无黏液</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写抽查情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>具体准备量可由店长根据营业情况进行调整</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写调整情况..."></textarea></td>
+                    </tr>
+                    
+                    <!-- 风幕柜区域：串菜 -->
+                    <tr class="category-header">
+                        <td rowspan="8">风幕柜区域：串菜</td>
+                        <td>串菜区域所有种类准备充足，每盘荤菜≥60根，素菜≥50根，西兰花、花菜、玉米≥20根，蔬菜≥20根，油面筋≥10根，小皮蛋≥20根</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>串菜上架原则：新来的放下面，旧的放上面</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>上架前检查旧品的状态（看：色泽正常无霉斑；闻：无异味酸味；触：弹性正常无黏液）以及日期标识，≥24小时的菜品不上架并上报销毁（冻品除外）记录到菜品销毁记录本上</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写销毁记录..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>所有串菜盘里必须有垫有荷叶，且都是干净的</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>牛蛙、黄辣丁已添加冰块冰镇且盘子底部无积水</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>水盒里的水是清澈、干净、无异味的，无从竹签上掉落的菜品</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>高峰期（午11:30-14:00；晚17:30-21:00）保证每个串菜品类都有菜品，少量时立即补充或更换同类替代品</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写补充情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>包菜牛肉、绿叶蔬菜不能贴壁，绿叶蔬菜无焉萎菜品，可适量喷洒水珠</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    
+                    <!-- 小料台区域 -->
+                    <tr class="category-header">
+                        <td rowspan="5">小料台区域</td>
+                        <td>所有小料均已摆出，无遗漏，白糖、盐、芝麻已添加，酱油、醋、麻油已添加</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>小料台所有器皿干净、摆放整齐，在同一水平线上，器皿统一、美观<br>所有小料应配有相应取料餐具，不得混用</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>香菜、香葱新鲜、无焉萎、无干瘪</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>芝麻酱符合出品标准，粘稠、丝滑、细腻、香味浓郁</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>蒜泥符合出品标准，无发绿、异味；小米辣新鲜、无异味；折耳根无发黑</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    
+                    <!-- 小吃及米饭 -->
+                    <tr class="category-header">
+                        <td rowspan="4">小吃及米饭</td>
+                        <td>凉拌菜当日制作当日清（午市/晚市分批次制作）</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写制作批次..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>米饭保持充足、新鲜</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>银耳汤备量充足，口味清甜适口，汤体晶莹粘稠，色泽正常</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>出品的小吃必须保证是香脆可口的，先开封先出，储存起来的必须时密封好的</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    
+                    <!-- 总体&准备 -->
+                    <tr class="category-header">
+                        <td rowspan="7">总体&准备</td>
+                        <td>取餐区域必须是干净、卫生、且摆放整齐的，每餐开档时应做调料瓶瓶口清洁</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>取餐区域所有客用物品应有相应标识标签</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>所有菜品应有相应菜牌</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>每日11:00已清空冰箱旧品（优先上架昨日冰箱菜品）</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写处理情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>厨房冰箱内有备用的串好的串菜和盘菜（由店内厨师与店长进行判断）</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备用情况..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>冰箱内所有已串好的菜品都贴有生产日期标签</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>取餐区域地面、台面、柜面、墙面清洁干净；所有灯光、设备正常运作</td>
+                        <td class="checkbox-cell"><input type="checkbox"></td>
+                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-download" onclick="downloadScreenshot()">
+                <i class="fas fa-camera"></i> 保存截图
+            </button>
+            <button class="btn btn-preview" onclick="previewScreenshot()">
+                <i class="fas fa-eye"></i> 预览截图
+            </button>
+            <button class="btn btn-reset" onclick="resetForm()">
+                <i class="fas fa-redo"></i> 重置表格
+            </button>
+        </div>
+        
+        <footer>
+            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.1</p>
+        </footer>
+    </div>
     
-        <textarea id="user-input"></textarea>
-        <button class="send-button" id="send-button" disabled>Send</button>
-  
-
-<select id="model-select">
-	<option value="meta-llama/Llama-3.3-70B-Instruct">Llama3.3.70</option>
-            <option value="Vendor-A/Qwen/Qwen2.5-72B-Instruct">VQwen2.5.72</option>
-            <option value="deepseek-ai/DeepSeek-R1">DeepSeek-R1</option>
-            <option value="Qwen/Qwen2.5-Coder-32B-Instruct">QwenCoder32</option>
-        </select>
-
-<button id="show-settings">⚙️</button> <div id="settings-container">
-        <label for="api-key">KEY: </label>
-<input type="text" id="api-key" style="width: 200px;" value="sk-qrkolqnrrnvntvatlimlqczoxtztfhernjejdugbswdq"><br><br>
-
-<label for="api-url">URL: </label>
-<input type="text" id="api-url" style="width: 200px;" value="https://api.siliconflow.cn/v1/chat/completions"><br><br>
-
-        <button id="save-api">Save API</button>
+    <!-- 预览模态框 -->
+    <div id="preview-modal" class="preview-modal">
+        <div class="preview-content">
+            <button class="close-btn" onclick="closePreview()">&times;</button>
+            <h2>检查表预览</h2>
+            <img id="preview-image" class="preview-image" alt="检查表预览">
+            <div class="preview-actions">
+                <button class="btn btn-download" onclick="downloadFromPreview()">
+                    <i class="fas fa-download"></i> 下载图片
+                </button>
+                <button class="btn btn-reset" onclick="closePreview()">
+                    <i class="fas fa-times"></i> 关闭预览
+                </button>
+            </div>
+        </div>
     </div>
-     
+    
+    <!-- 截图进度提示 -->
+    <div id="screenshot-progress" class="screenshot-progress">
+        <div class="progress-content">
+            <div class="spinner"></div>
+            <h3>正在生成截图...</h3>
+            <p>请稍候，这可能需要几秒钟时间</p>
+        </div>
     </div>
-  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <script>
-        document.addEventListener('DOMContentLoaded', function() {
-      const messagesContainer = document.getElementById('messages');
-      const userInput = document.getElementById('user-input');
-      const sendButton = document.getElementById('send-button');
-const apiKeyInput = document.getElementById('api-key');
-const apiUrlInput = document.getElementById('api-url');
-const showSettingsButton = document.getElementById('show-settings');
-const settingsContainer = document.getElementById('settings-container');
-const saveApiButton = document.getElementById('save-api');
-const modelSelect = document.getElementById('model-select');
-
-
-	userInput.addEventListener('input', function() {
- 	 this.style.height = 'auto';
-	  this.style.height = (this.scrollHeight) + 'px';
-	});
-
-
-// On page load
-let apiKey = getCookie('API_KEY') || localStorage.getItem('apiKey');
-let apiUrl = getCookie('API_URL') || localStorage.getItem('apiUrl');
-let selectedModel = getCookie('SELECTED_MODEL') || localStorage.getItem('selectedModel');
-
-if (selectedModel) {
-    modelSelect.value = selectedModel; // Set the selected model in the dropdown
-}
-
-
-let context = [];
-const MAX_CONTEXT_SIZE = 3;
-
-// Check for existing API credentials
-if (apiKey && apiUrl) {
-    // Hide settings container
-    settingsContainer.style.display = 'none';
-} else {
-    // Show settings container
-    settingsContainer.style.display = 'block';
-}
-
-showSettingsButton.addEventListener('click', () => {
-  if (settingsContainer.style.display === 'none') {
-    settingsContainer.style.display = 'block';
-  } else {
-    settingsContainer.style.display = 'none';
-  }
-});
-
-saveApiButton.addEventListener('click', () => {
-    apiKey = apiKeyInput.value;
-    apiUrl = apiUrlInput.value;
-    selectedModel = modelSelect.value; // Get the selected model
-
-    // Set cookies with 365 days expiration
-    setCookie('API_KEY', apiKey, 365);
-    setCookie('API_URL', apiUrl, 365);
-    setCookie('SELECTED_MODEL', selectedModel, 365);
-
-    // Optionally, you can still store in localStorage for fallback
-    localStorage.setItem('apiKey', apiKey);
-    localStorage.setItem('apiUrl', apiUrl);
-    localStorage.setItem('selectedModel', selectedModel);
-
-    settingsContainer.style.display = 'none'; // Hide after saving
-});
-
-
-
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
-modelSelect.addEventListener('change', (event) => {
-  const selectedModel = event.target.value;
-  setCookie('SELECTED_MODEL', selectedModel, 365);
-  // Optionally, update localStorage as well
-  localStorage.setItem('selectedModel', selectedModel);
-});
-
-function checkInput() {
-        sendButton.disabled = userInput.value.trim() === "";
-	this.style.height = 'auto'; // Reset height to recalculate
-  this.style.height = (this.scrollHeight) + 'px'; // Set height to scrollHeight
-    }
-
-    sendButton.addEventListener('click', sendMessage);
-
-    userInput.addEventListener('input', checkInput); // Listen for input changes
-    userInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-
-    // Initial check when the page loads
-    checkInput();
-
-
-
-
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-	function appendMessage(content, sender) {
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${sender}`;
-                if (typeof marked !== 'undefined') {
-                    messageElement.innerHTML = marked.parse(content);
-                } else {
-                    messageElement.textContent = content; // Fallback if marked isn't loaded
-                }
-                messagesContainer.appendChild(messageElement);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-
-	async function sendMessage() {
-        const userMessage = userInput.value.trim();
-   	 if (!userMessage || !apiKey || !apiUrl) {
-     	   sendButton.disabled = true; // Keep button disabled if API info is missing
-     	   sendButton.textContent = "Send";
-  	      return;
-  	  }
-
-   	 sendButton.disabled = true; // Disable during sending
-    	sendButton.textContent = "Loading...";
-                const selectedModel = modelSelect.value;
-
-                appendMessage(userMessage, 'user');
-	// Reset textarea height and class *before* clearing the value
-                userInput.style.height = 'auto';
-                userInput.classList.remove('multiline');
-                userInput.value = ''; // Clear the input AFTER resetting height
-
-
-                if (context.length > MAX_CONTEXT_SIZE) {
-                    const summaryPrompt = {
-                        role: 'user',
-                        content: `Recall context briefly. `
-                    };
-                    context.push(summaryPrompt);
-                }
-
-                context.push({ role: 'user', content: userMessage });
-                userInput.value = '';
-               
-                sendButton.textContent = "Loading...";
-	sendButton.disabled = true;
-
-                try {
-                    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: selectedModel,
-            messages: context.slice(-MAX_CONTEXT_SIZE),
-	    max_tokens: 4096,
-            temperature: 0.7,
-            top_p: 0.9,
-		frequency_penalty: 0.5, 
-  		presence_penalty: 0.3,
-	    n: 1,
-            stream: true
-        })
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        console.error("API Error:", errorData);
-        appendMessage(`Error: ${response.status} - ${response.statusText}`, 'bot');
-        return;
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder('utf-8');
-    let partialResponse = "";
-    let isSummary = false;
-
-    const messageElement = document.createElement('div');
-    messageElement.className = `message bot`;
-    messagesContainer.appendChild(messageElement);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-            messageElement.innerHTML = marked.parse(partialResponse);
-            if (isSummary) {
-                context.pop(); // Remove the summary prompt after receiving the summary
-            }
-            context.push({ role: 'assistant', content: partialResponse });
-            break;
-        }
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n').filter(line => line.trim() !== '');
-
-        for (const line of lines) {
-            if (line.startsWith('data: ')) {
-                try {
-                    const data = JSON.parse(line.substring(6));
-                    if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
-                        if (context.length > 2 && !isSummary && partialResponse.length === 0 && data.choices[0].delta.content.toLowerCase().includes("summary:")) {
-                            isSummary = true;
-                        }
-                        partialResponse += data.choices[0].delta.content;
-                        messageElement.innerHTML = marked.parse(partialResponse);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                } catch (parseError) {
-                    console.error("Parse error:", parseError, "Line:", line);
-                }
-            }
-        }
-    }
-} catch (error) {
-        console.error(error);
-        appendMessage('Error: Unable to connect to the server.', 'bot');
-      } finally {
-                    sendButton.disabled = false;
-                    sendButton.textContent = "Send";
-	checkInput(); // Check input after message is sent
-                }
-            }
-
-
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        // 设置默认日期为今天
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // 截图函数
+        function captureScreenshot(callback) {
+            const captureArea = document.getElementById('capture-area');
+            const progress = document.getElementById('screenshot-progress');
             
-	sendButton.addEventListener('click', sendMessage); // Correct placement!
-            userInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' && !event.shiftKey) { // Check if Shift key is not pressed
-                    event.preventDefault(); // Prevent default newline behavior
-                    sendMessage();
-	
-                }
+            // 显示进度提示
+            progress.style.display = 'flex';
+            
+            // 使用html2canvas生成截图
+            html2canvas(captureArea, {
+                scale: 2, // 提高截图质量
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // 隐藏进度提示
+                progress.style.display = 'none';
+                
+                // 将canvas转换为图片URL
+                const imgData = canvas.toDataURL('image/png');
+                
+                // 执行回调函数
+                if (callback) callback(imgData);
+            }).catch(err => {
+                progress.style.display = 'none';
+                console.error('截图生成失败:', err);
+                alert('截图生成失败，请重试或检查控制台获取详细信息');
             });
-        });
+        }
+        
+        // 下载截图
+        function downloadScreenshot() {
+            // 获取表单数据
+            const date = document.getElementById('date').value;
+            const checkTime = document.getElementById('check-time').value;
+            const inspector = document.getElementById('inspector').value;
+            const store = document.getElementById('store').value;
+            
+            if (!date || !inspector || !store) {
+                alert("请填写日期、检查人和门店信息！");
+                return;
+            }
+            
+            // 生成并下载截图
+            captureScreenshot(imgData => {
+                const link = document.createElement('a');
+                link.download = `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.png`;
+                link.href = imgData;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                alert('截图已保存！');
+            });
+        }
+        
+        // 预览截图
+        function previewScreenshot() {
+            // 获取表单数据
+            const date = document.getElementById('date').value;
+            const inspector = document.getElementById('inspector').value;
+            const store = document.getElementById('store').value;
+            
+            if (!date || !inspector || !store) {
+                alert("请填写日期、检查人和门店信息！");
+                return;
+            }
+            
+            // 生成并预览截图
+            captureScreenshot(imgData => {
+                const previewImage = document.getElementById('preview-image');
+                const previewModal = document.getElementById('preview-modal');
+                
+                previewImage.src = imgData;
+                previewModal.style.display = 'block';
+            });
+        }
+        
+        // 从预览下载截图
+        function downloadFromPreview() {
+            const imgData = document.getElementById('preview-image').src;
+            const date = document.getElementById('date').value;
+            const checkTime = document.getElementById('check-time').value;
+            const store = document.getElementById('store').value;
+            
+            const link = document.createElement('a');
+            link.download = `渝欢婆菜品上架检查表_${store}_${date}_${checkTime}.png`;
+            link.href = imgData;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // 关闭预览
+        function closePreview() {
+            document.getElementById('preview-modal').style.display = 'none';
+        }
+        
+        // 重置表单
+        function resetForm() {
+            if (confirm("确定要重置表格吗？所有勾选内容和备注将被清除。")) {
+                // 重置复选框
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // 重置备注
+                const textareas = document.querySelectorAll('textarea');
+                textareas.forEach(textarea => {
+                    textarea.value = "";
+                });
+                
+                // 重置表单字段
+                document.getElementById('date').valueAsDate = new Date();
+                document.getElementById('inspector').value = "";
+            }
+        }
     </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>
