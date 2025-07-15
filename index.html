@@ -685,7 +685,7 @@
         </div>
     </div>
 
-    <script>
+ <script>
         // 设置默认日期为今天
         document.getElementById('date').valueAsDate = new Date();
         
@@ -703,18 +703,19 @@
             }
         }
         
-        // 截图函数
-        function captureScreenshot(callback) {
+        // 核心截图函数（重命名避免冲突）
+        function takeScreenshot(callback) {
             const captureArea = document.getElementById('capture-area');
             const progress = document.getElementById('screenshot-progress');
             
-            // 验证必填项
+            // 验证所有必填项
             const date = document.getElementById('date').value;
             const inspector = document.getElementById('inspector').value;
             const store = document.getElementById('store').value;
+            const checkTime = document.getElementById('check-time').value;
             
-            if (!date || !inspector || !store) {
-                showStatus("请填写日期、检查人和门店信息！", false);
+            if (!date || !inspector || !store || !checkTime) {
+                showStatus("请填写日期、检查时间、检查人和门店信息！", false);
                 return;
             }
             
@@ -739,7 +740,7 @@
             }).catch(err => {
                 progress.style.display = 'none';
                 console.error('截图生成失败:', err);
-                showStatus('截图生成失败，请重试', false);
+                showStatus('截图生成失败: ' + err.message, false);
             });
         }
         
@@ -747,11 +748,10 @@
         function captureScreenshot() {
             // 获取表单数据
             const date = document.getElementById('date').value;
-            const checkTime = document.getElementById('check-time').value;
             const store = document.getElementById('store').value;
             
             // 生成并下载截图
-            captureScreenshot(imgData => {
+            takeScreenshot(imgData => {
                 const link = document.createElement('a');
                 link.download = `渝欢婆菜品上架检查表_${store}_${date}.png`;
                 link.href = imgData;
@@ -765,18 +765,8 @@
         
         // 预览截图
         function previewScreenshot() {
-            // 获取表单数据
-            const date = document.getElementById('date').value;
-            const inspector = document.getElementById('inspector').value;
-            const store = document.getElementById('store').value;
-            
-            if (!date || !inspector || !store) {
-                showStatus("请填写日期、检查人和门店信息！", false);
-                return;
-            }
-            
             // 生成并预览截图
-            captureScreenshot(imgData => {
+            takeScreenshot(imgData => {
                 const previewImage = document.getElementById('preview-image');
                 const previewModal = document.getElementById('preview-modal');
                 
