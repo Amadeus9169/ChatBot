@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>渝欢婆菜品上架检查表</title>
+    <title>渝欢婆菜品上架检查表 - 截图优化版</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -78,6 +77,17 @@
             border-color: #d32f2f;
             outline: none;
             box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+        }
+        .static-text {
+            display: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            background: white;
+            min-height: 40px;
+            word-break: break-word;
         }
         .table-container {
             overflow-x: auto;
@@ -381,6 +391,32 @@
                 border-radius: 0;
             }
         }
+        
+        /* 问题诊断区域 */
+        .diagnostic-section {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .diagnostic-section h3 {
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+        .diagnostic-section ul {
+            padding-left: 20px;
+        }
+        .diagnostic-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .solution-highlight {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -394,6 +430,7 @@
             <div class="info-item">
                 <label for="date">日期：</label>
                 <input type="date" id="date" required>
+                <div class="static-text" id="date-static"></div>
             </div>
             <div class="info-item">
                 <label for="check-time">检查时间：</label>
@@ -404,14 +441,29 @@
                     <option value="20:00">20:00</option>
                     <option value="22:00">22:00</option>
                 </select>
+                <div class="static-text" id="check-time-static"></div>
             </div>
             <div class="info-item">
                 <label for="inspector">检查人：</label>
                 <input type="text" id="inspector" placeholder="请输入姓名" required>
+                <div class="static-text" id="inspector-static"></div>
             </div>
             <div class="info-item">
                 <label for="store">门店：</label>
                 <input type="text" id="store" placeholder="门店名称" required>
+                <div class="static-text" id="store-static"></div>
+            </div>
+        </div>
+        
+        <div class="diagnostic-section">
+            <h3>问题诊断与解决方案</h3>
+            <ul>
+                <li><strong>问题描述：</strong>截图下载后，姓名与店名只有部分字符能显示</li>
+                <li><strong>根本原因：</strong>html2canvas 对输入框文本渲染存在兼容性问题</li>
+                <li><strong>解决方案：</strong>在截图前将输入框内容转换为静态文本元素</li>
+            </ul>
+            <div class="solution-highlight">
+                <strong>优化方案已实施：</strong>添加了静态文本容器，截图时自动替换输入框内容
             </div>
         </div>
         
@@ -612,7 +664,7 @@
         </div>
         
         <footer>
-            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.2 | 移动端优化版</p>
+            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.3 | 截图问题已修复</p>
         </footer>
     </div>
     
@@ -642,7 +694,7 @@
         </div>
     </div>
 
- <script>
+    <script>
         // 设置默认日期为今天
         document.getElementById('date').valueAsDate = new Date();
         
@@ -660,7 +712,54 @@
             }
         }
         
-        // 核心截图函数（重命名避免冲突）
+        // 替换输入框为静态文本
+        function replaceInputsWithStaticText() {
+            // 日期
+            const dateInput = document.getElementById('date');
+            const dateStatic = document.getElementById('date-static');
+            dateStatic.textContent = dateInput.value || '未选择日期';
+            
+            // 检查时间
+            const timeSelect = document.getElementById('check-time');
+            const timeStatic = document.getElementById('check-time-static');
+            timeStatic.textContent = timeSelect.options[timeSelect.selectedIndex].text;
+            
+            // 检查人
+            const inspectorInput = document.getElementById('inspector');
+            const inspectorStatic = document.getElementById('inspector-static');
+            inspectorStatic.textContent = inspectorInput.value || '未填写检查人';
+            
+            // 门店
+            const storeInput = document.getElementById('store');
+            const storeStatic = document.getElementById('store-static');
+            storeStatic.textContent = storeInput.value || '未填写门店';
+            
+            // 隐藏输入框，显示静态文本
+            dateInput.style.display = 'none';
+            timeSelect.style.display = 'none';
+            inspectorInput.style.display = 'none';
+            storeInput.style.display = 'none';
+            
+            document.querySelectorAll('.static-text').forEach(el => {
+                el.style.display = 'block';
+            });
+        }
+        
+        // 恢复输入框
+        function restoreInputElements() {
+            // 显示输入框
+            document.getElementById('date').style.display = 'block';
+            document.getElementById('check-time').style.display = 'block';
+            document.getElementById('inspector').style.display = 'block';
+            document.getElementById('store').style.display = 'block';
+            
+            // 隐藏静态文本
+            document.querySelectorAll('.static-text').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+        
+        // 核心截图函数
         function takeScreenshot(callback) {
             const captureArea = document.getElementById('capture-area');
             const progress = document.getElementById('screenshot-progress');
@@ -676,6 +775,9 @@
                 return;
             }
             
+            // 替换输入框为静态文本
+            replaceInputsWithStaticText();
+            
             // 显示进度提示
             progress.style.display = 'flex';
             
@@ -686,6 +788,9 @@
                 logging: false,
                 useCORS: true
             }).then(canvas => {
+                // 恢复输入框元素
+                restoreInputElements();
+                
                 // 隐藏进度提示
                 progress.style.display = 'none';
                 
@@ -695,6 +800,9 @@
                 // 执行回调函数
                 if (callback) callback(imgData);
             }).catch(err => {
+                // 恢复输入框元素
+                restoreInputElements();
+                
                 progress.style.display = 'none';
                 console.error('截图生成失败:', err);
                 showStatus('截图生成失败: ' + err.message, false);
