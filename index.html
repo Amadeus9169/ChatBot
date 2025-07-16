@@ -140,12 +140,12 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            resize: vertical;
+            resize: none; /* 禁用手动调整大小 */
             min-height: 50px;
             font-size: 14px;
             text-align: center;
             transition: border-color 0.3s;
-            /* 添加文本自动换行 */
+            overflow: hidden; /* 隐藏滚动条 */
             white-space: pre-wrap; /* 保留换行符 */
             word-break: break-word; /* 允许单词内换行 */
         }
@@ -395,30 +395,25 @@
             }
         }
         
-        /* 问题诊断区域 */
-        .diagnostic-section {
-            background: #fff8e1;
-            border-left: 4px solid #ffc107;
+        /* 新添加的管理人员信息行 */
+        .manager-info {
+            background-color: #f5f5f5;
             padding: 15px;
-            margin: 20px;
-            border-radius: 0 8px 8px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
         }
-        .diagnostic-section h3 {
-            color: #d32f2f;
-            margin-bottom: 10px;
+        .manager-info .info-item {
+            flex: 1;
+            min-width: 200px;
         }
-        .diagnostic-section ul {
-            padding-left: 20px;
-        }
-        .diagnostic-section li {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        .solution-highlight {
-            background-color: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
+        
+        /* 自动调整高度的文本区域 */
+        .auto-resize {
+            resize: none;
+            overflow: hidden;
+            min-height: 50px;
         }
     </style>
 </head>
@@ -458,7 +453,19 @@
             </div>
         </div>
         
- 
+        <!-- 新添加的管理人员信息行 -->
+        <div class="manager-info">
+            <div class="info-item">
+                <label for="manager">店长：</label>
+                <input type="text" id="manager" placeholder="请输入店长姓名" required>
+                <div class="static-text" id="manager-static"></div>
+            </div>
+            <div class="info-item">
+                <label for="shift-leader">带班人：</label>
+                <input type="text" id="shift-leader" placeholder="请输入带班人姓名" required>
+                <div class="static-text" id="shift-leader-static"></div>
+            </div>
+        </div>
         
         <div class="table-container">
             <table id="checklist-table">
@@ -473,166 +480,166 @@
                     <tr class="category-header">
                         <td><strong>区域：风幕柜区域：盘菜</strong>盘菜区域：所有盘菜准备充足，种类充足；保鲜膜完整，叠放整齐，排列在同一水平线上，摆放高度≤3层</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>荤菜区7种：嫩牛肉≥4，无骨鸭掌≥4，双椒牛肉≥4，卤猪蹄≥4，虾滑≥4，毛肚≥2；千层肚≥4</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>素菜区6种：海带苗≥4，粉丝≥4，长寿菜≥4，响铃卷≥4，鸭血≥4，炸蛋≥4</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>蔬菜区3种：茼蒿≥2，空心菜≥2，生菜≥2，所有蔬菜无焉萎，适量喷洒水珠</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>主食区3种：手工面条≥12，方便面≥12，川粉≥12</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>所有盘菜都放置到相对应的标签位置，排放整齐，美观</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>盘菜开膜抽查：看：色泽正常无霉斑；闻：无异味酸味；触：弹性正常无黏液</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写抽查情况..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写抽查情况..."></textarea></td>
                     </tr>
                     <tr>
                         <td>具体准备量可由店长根据营业情况进行调整</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写调整情况..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写调整情况..."></textarea></td>
                     </tr>
                     
                     <tr class="category-header">
                         <td><strong>区域：风幕柜区域：串菜</strong>串菜区域所有种类准备充足，每盘荤菜≥60根，素菜≥50根，西兰花、花菜、玉米≥20根，蔬菜≥20根，油面筋≥10根，小皮蛋≥20根</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>串菜上架原则：新来的放下面，旧的放上面</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>上架前检查旧品的状态（看：色泽正常无霉斑；闻：无异味酸味；触：弹性正常无黏液）以及日期标识，≥24小时的菜品不上架并上报销毁（冻品除外）记录到菜品销毁记录本上</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写销毁记录..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写销毁记录..."></textarea></td>
                     </tr>
                     <tr>
                         <td>所有串菜盘里必须有垫有荷叶，且都是干净的</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>牛蛙、黄辣丁已添加冰块冰镇且盘子底部无积水</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>水盒里的水是清澈、干净、无异味的，无从竹签上掉落的菜品</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>高峰期（午11:30-14:00；晚17:30-21:00）保证每个串菜品类都有菜品，少量时立即补充或更换同类替代品</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写补充情况..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写补充情况..."></textarea></td>
                     </tr>
                     <tr>
                         <td>包菜牛肉、绿叶蔬菜不能贴壁，绿叶蔬菜无焉萎菜品，可适量喷洒水珠</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     
                     <tr class="category-header">
                         <td><strong>区域：小料台区域</strong>所有小料均已摆出，无遗漏，白糖、盐、芝麻已添加，酱油、醋、麻油已添加</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>小料台所有器皿干净、摆放整齐，在同一水平线上，器皿统一、美观<br>所有小料应配有相应取料餐具，不得混用</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>香菜、香葱新鲜、无焉萎、无干瘪</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>芝麻酱符合出品标准，粘稠、丝滑、细腻、香味浓郁</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>蒜泥符合出品标准，无发绿、异味；小米辣新鲜、无异味；折耳根无发黑</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     
                     <tr class="category-header">
                         <td><strong>区域：小吃及米饭</strong>凉拌菜当日制作当日清（午市/晚市分批次制作）</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写制作批次..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写制作批次..."></textarea></td>
                     </tr>
                     <tr>
                         <td>米饭保持充足、新鲜</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>银耳汤备量充足，口味清甜适口，汤体晶莹粘稠，色泽正常</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>出品的小吃必须保证是香脆可口的，先开封先出，储存起来的必须时密封好的</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     
                     <tr class="category-header">
                         <td><strong>区域：总体&准备</strong>取餐区域必须是干净、卫生、且摆放整齐的，每餐开档时应做调料瓶瓶口清洁</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>取餐区域所有客用物品应有相应标识标签</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>所有菜品应有相应菜牌</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>每日11:00已清空冰箱旧品（优先上架昨日冰箱菜品）</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写处理情况..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写处理情况..."></textarea></td>
                     </tr>
                     <tr>
                         <td>厨房冰箱内有备用的串好的串菜和盘菜（由店内厨师与店长进行判断）</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备用情况..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备用情况..."></textarea></td>
                     </tr>
                     <tr>
                         <td>冰箱内所有已串好的菜品都贴有生产日期标签</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                     <tr>
                         <td>取餐区域地面、台面、柜面、墙面清洁干净；所有灯光、设备正常运作</td>
                         <td class="checkbox-cell"><input type="checkbox"></td>
-                        <td class="note-cell"><textarea placeholder="填写备注..."></textarea></td>
+                        <td class="note-cell"><textarea class="auto-resize" placeholder="填写备注..."></textarea></td>
                     </tr>
                 </tbody>
             </table>
@@ -657,7 +664,7 @@
         </div>
         
         <footer>
-            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.3 | 截图问题已修复</p>
+            <p>© 2023 渝欢婆门店管理 | 检查表版本 1.4 | 备注自动调节 & 添加管理人员</p>
         </footer>
     </div>
     
@@ -705,6 +712,23 @@
             }
         }
         
+        // 自动调整textarea高度
+        function autoResizeTextarea() {
+            const textareas = document.querySelectorAll('textarea.auto-resize');
+            textareas.forEach(textarea => {
+                textarea.style.height = 'auto';
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            });
+        }
+        
+        // 为所有自动调整的textarea添加事件监听器
+        document.querySelectorAll('textarea.auto-resize').forEach(textarea => {
+            textarea.addEventListener('input', autoResizeTextarea);
+        });
+        
+        // 初始调整高度
+        window.addEventListener('load', autoResizeTextarea);
+        
         // 替换输入框为静态文本
         function replaceInputsWithStaticText() {
             // 日期
@@ -727,11 +751,23 @@
             const storeStatic = document.getElementById('store-static');
             storeStatic.textContent = storeInput.value || '未填写门店';
             
+            // 店长
+            const managerInput = document.getElementById('manager');
+            const managerStatic = document.getElementById('manager-static');
+            managerStatic.textContent = managerInput.value || '未填写店长';
+            
+            // 带班人
+            const shiftLeaderInput = document.getElementById('shift-leader');
+            const shiftLeaderStatic = document.getElementById('shift-leader-static');
+            shiftLeaderStatic.textContent = shiftLeaderInput.value || '未填写带班人';
+            
             // 隐藏输入框，显示静态文本
             dateInput.style.display = 'none';
             timeSelect.style.display = 'none';
             inspectorInput.style.display = 'none';
             storeInput.style.display = 'none';
+            managerInput.style.display = 'none';
+            shiftLeaderInput.style.display = 'none';
             
             document.querySelectorAll('.static-text').forEach(el => {
                 el.style.display = 'block';
@@ -745,6 +781,8 @@
             document.getElementById('check-time').style.display = 'block';
             document.getElementById('inspector').style.display = 'block';
             document.getElementById('store').style.display = 'block';
+            document.getElementById('manager').style.display = 'block';
+            document.getElementById('shift-leader').style.display = 'block';
             
             // 隐藏静态文本
             document.querySelectorAll('.static-text').forEach(el => {
@@ -761,12 +799,17 @@
             const date = document.getElementById('date').value;
             const inspector = document.getElementById('inspector').value;
             const store = document.getElementById('store').value;
+            const manager = document.getElementById('manager').value;
+            const shiftLeader = document.getElementById('shift-leader').value;
             const checkTime = document.getElementById('check-time').value;
             
-            if (!date || !inspector || !store || !checkTime) {
-                showStatus("请填写日期、检查时间、检查人和门店信息！", false);
+            if (!date || !inspector || !store || !checkTime || !manager || !shiftLeader) {
+                showStatus("请填写所有必填信息！", false);
                 return;
             }
+            
+            // 确保所有textarea高度已调整
+            autoResizeTextarea();
             
             // 替换输入框为静态文本
             replaceInputsWithStaticText();
@@ -884,12 +927,16 @@
                 const textareas = document.querySelectorAll('textarea');
                 textareas.forEach(textarea => {
                     textarea.value = "";
+                    // 重置高度
+                    textarea.style.height = 'auto';
                 });
                 
                 // 重置表单字段
                 document.getElementById('date').valueAsDate = new Date();
                 document.getElementById('inspector').value = "";
                 document.getElementById('store').value = "";
+                document.getElementById('manager').value = "";
+                document.getElementById('shift-leader').value = "";
                 
                 showStatus("表格已重置！");
             }
